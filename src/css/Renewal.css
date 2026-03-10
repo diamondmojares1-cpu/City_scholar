@@ -1,0 +1,1864 @@
+/* ═══════════════════════════════════════════════════════════
+   CITY SCHOLAR — Renewals Page CSS (FULL)
+═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+/* ── Reset & Root ────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --navy: #0f1f3d;
+    --navy-mid: #162444;
+    --navy-light: #1e3360;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --bg: #f0f2f7;
+    --white: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0, 0, 0, .08);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, .14);
+    --sidebar-w: 220px;
+    font-family: 'Nunito', sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* ── Page Layout ─────────────────────────────────────────── */
+
+.scholars-container_renewals {
+    display: flex;
+    min-height: 100vh;
+}
+
+.scholars-main_renewals {
+    flex: 1;
+    width: 1200px;
+    margin-left: var(--sidebar-w);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-x: hidden;
+}
+
+
+/* ── Content Wrap ────────────────────────────────────────── */
+
+.renewals-content-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* ── Page Title ──────────────────────────────────────────── */
+
+.renewals-page-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+
+/* ── Stat Cards ──────────────────────────────────────────── */
+
+.renewals-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.renewals-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 22px 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: box-shadow .2s;
+}
+
+.renewals-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.renewals-card-number {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.1;
+}
+
+.renewals-card-label {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+
+/* ── Table Card ──────────────────────────────────────────── */
+
+.renewals-table-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+/* ── Search Row ──────────────────────────────────────────── */
+
+.renewals-search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.renewals-search-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 7px 14px;
+    height: 38px;
+    width: 260px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .06);
+    transition: border-color .15s;
+}
+
+.renewals-search-inner:focus-within {
+    border-color: var(--accent);
+}
+
+.renewals-search-inner input {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    width: 100%;
+}
+
+.renewals-search-inner input::placeholder {
+    color: var(--muted);
+}
+
+.renewals-status-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-left: auto;
+}
+
+
+/* ── Table ───────────────────────────────────────────────── */
+
+.renewals-table-wrap {
+    overflow-x: auto;
+    border-radius: var(--radius-sm);
+}
+
+.renewals-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.renewals-table thead {
+    background: var(--navy);
+    color: var(--white);
+}
+
+.renewals-table thead th {
+    padding: 11px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: .3px;
+    white-space: nowrap;
+}
+
+.renewals-table thead th:first-child {
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.renewals-table thead th:last-child {
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.renewals-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background .15s;
+}
+
+.renewals-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.renewals-table tbody tr:hover {
+    background: #f8faff;
+}
+
+.renewals-table tbody tr:nth-child(even) {
+    background: #f5f7fb;
+}
+
+.renewals-table tbody tr:nth-child(even):hover {
+    background: #eef1fa;
+}
+
+.renewals-table tbody td {
+    padding: 11px 14px;
+    color: var(--text);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.renewals-table tbody td:first-child {
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.renewals-empty {
+    text-align: center;
+    padding: 28px !important;
+    color: var(--muted);
+    font-style: italic;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   STATUS BADGES  — covers ALL class-name patterns
+══════════════════════════════════════════════════════════ */
+
+.renewals-badge {
+    display: inline-block;
+    padding: 4px 13px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: .2px;
+}
+
+
+/* ── Approved ─────────────────────────────────────────────── */
+
+.renewals-badge-approved,
+.renewals-badge.renewals-badge-approved,
+.renewals-badge.status-approved,
+.renewals-badge.badge-approved,
+.renewals-badge.approved {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+
+/* ── Pending ──────────────────────────────────────────────── */
+
+.renewals-badge-pending,
+.renewals-badge.renewals-badge-pending,
+.renewals-badge.status-pending,
+.renewals-badge.badge-pending,
+.renewals-badge.pending {
+    background: #fef9c3;
+    color: #854d0e;
+    border: 1px solid #fde68a;
+}
+
+
+/* ── Reviewing / Pending Review ───────────────────────────── */
+
+.renewals-badge-reviewing,
+.renewals-badge.renewals-badge-reviewing,
+.renewals-badge.status-reviewing,
+.renewals-badge.badge-reviewing,
+.renewals-badge.reviewing,
+.renewals-badge-pending-review,
+.renewals-badge.pending-review {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+
+/* ── Rejected ─────────────────────────────────────────────── */
+
+.renewals-badge-rejected,
+.renewals-badge.renewals-badge-rejected,
+.renewals-badge.status-rejected,
+.renewals-badge.badge-rejected,
+.renewals-badge.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+
+/* ── Missing ──────────────────────────────────────────────── */
+
+.renewals-badge-missing,
+.renewals-badge.renewals-badge-missing,
+.renewals-badge.status-missing,
+.renewals-badge.badge-missing,
+.renewals-badge.missing {
+    background: #f3e8ff;
+    color: #7e22ce;
+    border: 1px solid #e9d5ff;
+}
+
+
+/* ── View Button ─────────────────────────────────────────── */
+
+.renewals-see-more {
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .18s;
+    white-space: nowrap;
+}
+
+.renewals-see-more:hover {
+    background: var(--accent-hover);
+}
+
+
+/* ── Pagination ──────────────────────────────────────────── */
+
+.renewals-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 4px 0;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.renewals-pagination-info {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.renewals-pagination-btns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.renewals-pg-btn {
+    min-width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background .15s, color .15s, border-color .15s;
+}
+
+.renewals-pg-btn:hover {
+    background: var(--accent);
+    color: var(--white);
+    border-color: var(--accent);
+}
+
+.renewals-pg-btn.active {
+    background: var(--accent);
+    color: var(--white);
+    border-color: var(--accent);
+}
+
+.renewals-pg-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+
+/* ── Error Banner ────────────────────────────────────────── */
+
+.renewals-error-banner {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   MODAL — new design (matches ScholarshipApplications)
+══════════════════════════════════════════════════════════ */
+
+
+/* Overlay */
+
+.rnw-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+}
+
+
+/* Modal shell */
+
+.rnw-modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 860px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    animation: rnwSlideIn 0.2s ease;
+}
+
+@keyframes rnwSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* Dark header */
+
+.rnw-modal-header {
+    background: #1e2d4d;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.rnw-modal-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #374e7a;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+}
+
+.rnw-modal-header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.rnw-modal-name {
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rnw-modal-subtitle {
+    color: #94a3b8;
+    font-size: 0.82rem;
+    margin: 0;
+}
+
+.rnw-modal-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.rnw-modal-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    line-height: 1;
+}
+
+.rnw-modal-close:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+
+/* Scrollable body */
+
+.rnw-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px 8px;
+}
+
+
+/* Sections */
+
+.rnw-modal-section {
+    padding: 20px 0 4px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.rnw-modal-section:last-child {
+    border-bottom: none;
+}
+
+.rnw-section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.rnw-section-icon {
+    color: #1e3a8a;
+    font-size: 1rem;
+}
+
+.rnw-section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+
+/* Info grid — card-style fields */
+
+.rnw-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.rnw-info-field {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rnw-info-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+}
+
+.rnw-info-value {
+    font-size: 0.9rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+
+/* Document rows */
+
+.rnw-docs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rnw-doc-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.rnw-doc-link {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.rnw-doc-link:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+}
+
+.rnw-doc-missing {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+}
+
+.rnw-doc-icon {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.rnw-doc-label {
+    flex: 1;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.rnw-doc-ext {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.rnw-doc-missing-tag {
+    font-size: 0.72rem;
+    color: #ef4444;
+    background: #fee2e2;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.rnw-no-docs {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 0;
+}
+
+
+/* Doc action buttons */
+
+.rnw-doc-actions {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.rnw-doc-btn-preview,
+.rnw-doc-btn-open {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s;
+}
+
+.rnw-doc-btn-preview {
+    background: #fff;
+    border: 1.5px solid #bfdbfe;
+    color: #1d4ed8;
+}
+
+.rnw-doc-btn-preview:hover {
+    background: #dbeafe;
+}
+
+.rnw-doc-btn-open {
+    background: #1e3a8a;
+    border: none;
+    color: #fff;
+}
+
+.rnw-doc-btn-open:hover {
+    background: #1e40af;
+}
+
+
+/* Decision section */
+
+.rnw-decision-section {
+    border-bottom: none !important;
+}
+
+.rnw-decision-hint {
+    font-size: 0.83rem;
+    color: #64748b;
+    margin: 0 0 14px;
+    line-height: 1.5;
+}
+
+.rnw-radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.rnw-radio-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+}
+
+.rnw-radio-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rnw-radio-approve {
+    background: #f0fdf4;
+}
+
+.rnw-radio-approve:hover {
+    border-color: #86efac;
+}
+
+.rnw-active-approve {
+    border-color: #22c55e !important;
+    background: #f0fdf4 !important;
+}
+
+.rnw-radio-reject {
+    background: #fff7f7;
+}
+
+.rnw-radio-reject:hover {
+    border-color: #fca5a5;
+}
+
+.rnw-active-reject {
+    border-color: #ef4444 !important;
+    background: #fff1f1 !important;
+}
+
+.rnw-radio-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.rnw-icon-approve {
+    color: #22c55e;
+}
+
+.rnw-icon-reject {
+    color: #ef4444;
+}
+
+.rnw-radio-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rnw-radio-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.rnw-radio-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+
+/* Alerts */
+
+.rnw-alert {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.83rem;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.rnw-alert-success {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.rnw-alert-error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+
+/* Modal footer */
+
+.rnw-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 24px;
+    border-top: 1px solid #f1f5f9;
+    flex-shrink: 0;
+    background: #fff;
+}
+
+.rnw-footer-cancel {
+    padding: 9px 22px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.rnw-footer-cancel:hover:not(:disabled) {
+    background: #f8fafc;
+}
+
+.rnw-footer-submit {
+    padding: 9px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #1e3a8a;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.rnw-footer-submit:hover:not(:disabled) {
+    background: #1e40af;
+}
+
+.rnw-footer-submit:disabled,
+.rnw-footer-cancel:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* Spinner */
+
+@keyframes rnw-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rnw-spin {
+    animation: rnw-spin 0.8s linear infinite;
+}
+
+
+/* Document preview overlay */
+
+.rnw-preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    padding: 20px;
+}
+
+.rnw-preview-box {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.rnw-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1e293b;
+}
+
+.rnw-preview-header button {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.rnw-preview-header button:hover {
+    background: #e2e8f0;
+}
+
+.rnw-preview-img {
+    width: 100%;
+    max-height: calc(90vh - 60px);
+    object-fit: contain;
+    display: block;
+}
+
+.rnw-preview-iframe {
+    width: 100%;
+    height: calc(90vh - 60px);
+    border: none;
+}
+
+.rnw-preview-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px;
+    color: #64748b;
+}
+
+.rnw-preview-fallback a {
+    color: #1d4ed8;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   RENEWAL MODAL — append to src/css/Renewal.css
+   Same design as ScholarshipApplications modal
+═══════════════════════════════════════════════════════════ */
+
+
+/* ── Modal overlay ───────────────────────────────────────── */
+
+.rnw-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+    padding: 20px;
+}
+
+.rnw-modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+    animation: rnwSlideUp .22s ease;
+}
+
+@keyframes rnwSlideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+/* ── Modal Header ────────────────────────────────────────── */
+
+.rnw-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    background: #0f1f3d;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.rnw-modal-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    letter-spacing: 1px;
+}
+
+.rnw-modal-head-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.rnw-modal-head-info h2 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rnw-modal-head-info p {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rnw-modal-head-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.rnw-modal-close-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+}
+
+.rnw-modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.26);
+}
+
+
+/* ── Modal Body ──────────────────────────────────────────── */
+
+.rnw-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    scrollbar-width: thin;
+    scrollbar-color: #e2e8f0 transparent;
+}
+
+
+/* ── Section Header ──────────────────────────────────────── */
+
+.rnw-modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rnw-modal-section-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.rnw-modal-section-icon {
+    font-size: 0.95rem;
+    color: #0f1f3d;
+}
+
+.rnw-modal-section-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+
+/* ── Info Grid 2col ──────────────────────────────────────── */
+
+.rnw-info-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.rnw-info-field {
+    background: #f8fafc;
+    border: 1px solid #e8edf4;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rnw-info-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #94a3b8;
+}
+
+.rnw-info-value {
+    font-size: 0.875rem;
+    color: #0f172a;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+
+/* ── Document Rows — Preview + Open ─────────────────────── */
+
+.rnw-docs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rnw-doc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1.5px solid;
+    transition: background .12s;
+}
+
+.rnw-doc-row--present {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.rnw-doc-row--present:hover {
+    background: #dbeafe;
+}
+
+.rnw-doc-row--missing {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    border-style: dashed;
+}
+
+.rnw-doc-row-icon {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    color: #1d4ed8;
+}
+
+.rnw-doc-row--missing .rnw-doc-row-icon {
+    color: #94a3b8;
+}
+
+.rnw-doc-row-label {
+    flex: 1;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.rnw-doc-row--missing .rnw-doc-row-label {
+    color: #94a3b8;
+}
+
+.rnw-doc-missing-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #94a3b8;
+    padding: 3px 10px;
+    border-radius: 999px;
+}
+
+
+/* Preview + Open button group */
+
+.rnw-doc-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.rnw-doc-preview-btn {
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 7px;
+    border: 1.5px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+    white-space: nowrap;
+}
+
+.rnw-doc-preview-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.rnw-doc-open-btn {
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 7px;
+    background: #0f1f3d;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    transition: background .15s;
+}
+
+.rnw-doc-open-btn:hover {
+    background: #1e2d7d;
+}
+
+.rnw-no-docs {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    text-align: center;
+    padding: 16px;
+}
+
+
+/* ── Preview Lightbox ────────────────────────────────────── */
+
+.rnw-preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 24px;
+}
+
+.rnw-preview-box {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 860px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
+}
+
+.rnw-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: #0f1f3d;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.rnw-preview-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.rnw-preview-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: background .15s;
+}
+
+.rnw-preview-close:hover {
+    background: rgba(255, 255, 255, 0.26);
+}
+
+.rnw-preview-body {
+    flex: 1;
+    overflow: auto;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    min-height: 200px;
+}
+
+.rnw-preview-img {
+    max-width: 100%;
+    max-height: calc(88vh - 120px);
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.rnw-preview-iframe {
+    width: 100%;
+    height: calc(88vh - 120px);
+    border: none;
+    border-radius: 8px;
+}
+
+.rnw-preview-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.rnw-preview-fallback a {
+    color: #1d4ed8;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rnw-preview-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+    background: #fff;
+}
+
+
+/* ── Decision Section ────────────────────────────────────── */
+
+.rnw-decision-section {
+    background: #f8faff;
+    border: 1.5px solid #e0eaff;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.rnw-decision-hint {
+    font-size: 0.8rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.rnw-decision-hint strong {
+    color: #0f172a;
+}
+
+.rnw-radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.rnw-radio-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .18s, background .18s, box-shadow .18s;
+}
+
+.rnw-radio-card input[type="radio"] {
+    display: none;
+}
+
+.rnw-radio-approve:hover {
+    border-color: #22c55e;
+    background: #f0fdf4;
+}
+
+.rnw-radio-reject:hover {
+    border-color: #ef4444;
+    background: #fff5f5;
+}
+
+.rnw-active-approve {
+    border-color: #22c55e !important;
+    background: #f0fdf4 !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, .15);
+}
+
+.rnw-active-reject {
+    border-color: #ef4444 !important;
+    background: #fff5f5 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, .15);
+}
+
+.rnw-radio-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.rnw-icon-approve {
+    color: #22c55e;
+}
+
+.rnw-icon-reject {
+    color: #ef4444;
+}
+
+.rnw-radio-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rnw-radio-label {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.rnw-radio-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+
+/* Alerts */
+
+.rnw-alert {
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.rnw-alert-success {
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    color: #166534;
+}
+
+.rnw-alert-error {
+    background: #fef2f2;
+    border: 1.5px solid #fecaca;
+    color: #991b1b;
+}
+
+
+/* ── Modal Footer ────────────────────────────────────────── */
+
+.rnw-modal-footer-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.rnw-footer-cancel {
+    height: 38px;
+    padding: 0 20px;
+    border-radius: 8px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s;
+}
+
+.rnw-footer-cancel:hover:not(:disabled) {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.rnw-footer-cancel:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.rnw-footer-submit {
+    height: 38px;
+    padding: 0 22px;
+    border-radius: 8px;
+    border: none;
+    background: #0f1f3d;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s, opacity .15s;
+}
+
+.rnw-footer-submit:hover:not(:disabled) {
+    background: #1e2d7d;
+}
+
+.rnw-footer-submit:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.rnw-footer-submit.danger {
+    background: #dc2626;
+}
+
+.rnw-footer-submit.danger:hover:not(:disabled) {
+    background: #b91c1c;
+}
+
+.rnw-spin {
+    animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+    .renewals-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+     :root {
+        --sidebar-w: 0px;
+    }
+    .scholars-main_renewals {
+        margin-left: 0;
+        padding: 14px;
+    }
+    .renewals-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .rnw-info-grid {
+        grid-template-columns: 1fr;
+    }
+    .rnw-radio-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .renewals-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════
+   RENEWAL TOGGLE — additions to Renewal.css
+══════════════════════════════════════════════════ */
+
+
+/* Title row with toggle button side by side */
+
+.renewals-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+
+/* The toggle button */
+
+.rnw-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.rnw-toggle-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.rnw-toggle-btn:active {
+    transform: translateY(0);
+}
+
+.rnw-toggle-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.rnw-toggle-btn.open {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.rnw-toggle-btn.open:hover {
+    background: #bbf7d0;
+}
+
+.rnw-toggle-btn.closed {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.rnw-toggle-btn.closed:hover {
+    background: #fecaca;
+}
+
+
+/* Status banner below title */
+
+.rnw-status-banner {
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.rnw-status-banner.open {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.rnw-status-banner.closed {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+}
+
+
+/* ── Toggle Confirm Modal ── */
+
+.rnw-toggle-modal {
+    background: #fff;
+    border-radius: 20px;
+    width: 400px;
+    max-width: 92vw;
+    padding: 36px 32px 28px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    animation: prof-pop 0.2s ease;
+}
+
+.rnw-toggle-icon-wrap {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+}
+
+.rnw-toggle-icon-wrap.opening {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.rnw-toggle-icon-wrap.closing {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.rnw-toggle-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.rnw-toggle-msg {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.rnw-toggle-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: center;
+}
+
+
+/* danger variant for submit btn */
+
+.rnw-footer-submit.danger {
+    background: #dc2626;
+}
+
+.rnw-footer-submit.danger:hover:not(:disabled) {
+    background: #b91c1c;
+}
+
+.rnw-spin {
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

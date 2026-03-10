@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to check if the requester is an admin
+    function isAdmin() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // Each user can access their own profile, OR an admin can access it
+    match /users/{userId} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Scholarship Drafts
+    match /scholarship_drafts/{userId} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Scholarship Applications
+    match /scholarship_applications/{userId} {
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Chat
+    match /chats/{chatId} {
+      // Admins can read all chats; users only their own
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+
+      match /messages/{messageId} {
+        // Inherits access logic or add specific admin override here
+        allow read, create: if request.auth != null;
+      }
+    }
+  }
+}

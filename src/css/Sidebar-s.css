@@ -1,0 +1,150 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.sd-sidebar {
+    width: 220px;
+    min-width: 220px;
+    height: 100vh;
+    background: linear-gradient(180deg, #0d1b4b 0%, #0a1535 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 0px 0 20px;
+    flex-shrink: 0;
+}
+
+
+/* ── Logo ── */
+
+.sd-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    margin-bottom: 16px;
+}
+
+.sd-logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(99, 120, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sd-logo-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.sd-logo-text {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #fff;
+    white-space: nowrap;
+}
+
+
+/* ── Nav ── */
+
+.sd-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 12px;
+    overflow-y: auto;
+}
+
+.sd-nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-align: left;
+    transition: background 0.18s, color 0.18s;
+    width: 100%;
+}
+
+.sd-nav-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+}
+
+.sd-nav-item.active {
+    background: linear-gradient(90deg, #3b5bfc 0%, #5271ff 100%);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(59, 91, 252, 0.45);
+}
+
+.sd-nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sd-nav-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.sd-nav-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ── Logout ── */
+
+.sd-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 12px 0;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-align: left;
+    transition: background 0.18s, color 0.18s;
+    width: calc(100% - 24px);
+}
+
+.sd-logout:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}

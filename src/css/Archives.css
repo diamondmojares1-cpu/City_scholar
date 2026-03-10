@@ -1,0 +1,365 @@
+/* ═══════════════════════════════════════════════════════════
+   Archives.css — matches screenshot + dark navy modal
+═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:      #1a2472;
+  --navy-dark: #0d1340;
+  --accent:    #2563eb;
+  --accent-h:  #1d4ed8;
+  --bg:        #eef0f8;
+  --white:     #ffffff;
+  --text:      #1e293b;
+  --muted:     #64748b;
+  --border:    #e2e8f0;
+  --sidebar-w: 220px;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ── Layout ──────────────────────────────────────────────── */
+.arc-container {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.arc-main {
+  flex: 1;
+  width: 1300px;
+  margin-left: var(--sidebar-w);
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Top Bar ─────────────────────────────────────────────── */
+.arc-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.arc-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.arc-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  padding: 7px 14px;
+  height: 38px;
+  width: 260px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  transition: border-color .15s;
+}
+.arc-search-wrap:focus-within { border-color: var(--accent); }
+.arc-search-icon { color: var(--muted); font-size: 0.85rem; flex-shrink: 0; }
+.arc-search-input {
+  border: none; background: transparent; outline: none;
+  font-size: 0.875rem; color: var(--text); width: 100%;
+  font-family: inherit;
+}
+.arc-search-input::placeholder { color: #aab4c4; }
+
+/* ── Error ───────────────────────────────────────────────── */
+.arc-error {
+  background: #fee2e2; color: #991b1b;
+  border: 1px solid #fca5a5; border-radius: 8px;
+  padding: 12px 16px; font-weight: 600; font-size: 13px;
+}
+
+/* ── Table Card ──────────────────────────────────────────── */
+.arc-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Table ───────────────────────────────────────────────── */
+.arc-table-wrap { overflow-x: auto; flex: 1; }
+
+.arc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+/* Dark navy header — matches screenshot */
+.arc-table thead tr {
+  background: #1a2472;
+}
+.arc-table thead th {
+  padding: 15px 22px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  color: #fff;
+  white-space: nowrap;
+  letter-spacing: .2px;
+}
+
+/* Body rows */
+.arc-table tbody tr {
+  border-bottom: 1px solid #eef1f8;
+  transition: background .12s;
+}
+.arc-table tbody tr:last-child { border-bottom: none; }
+.arc-table tbody tr:hover      { background: #f0f4ff; }
+
+/* Alternating rows — light blue tint matches screenshot */
+.arc-tr-alt { background: #eef2fb; }
+.arc-tr-alt:hover { background: #e4eaf8 !important; }
+
+.arc-table tbody td {
+  padding: 14px 22px;
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.arc-td-name   { font-weight: 700; color: #1e293b; }
+.arc-td-school { color: var(--muted); }
+
+.arc-empty {
+  text-align: center;
+  padding: 48px !important;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ── Unarchive Button — blue matches screenshot ──────────── */
+.arc-unarchive-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s, transform .1s;
+  white-space: nowrap;
+}
+.arc-unarchive-btn:hover:not(:disabled) {
+  background: var(--accent-h);
+  transform: translateY(-1px);
+}
+.arc-unarchive-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* ── Footer ──────────────────────────────────────────────── */
+.arc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  background: #fff;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* FIXED: was #0000 (fully transparent) */
+.arc-footer-info {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.arc-pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* FIXED: was #0000 (fully transparent) */
+.arc-pg-prev,
+.arc-pg-next {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  transition: background .15s;
+}
+.arc-pg-prev:hover:not(:disabled),
+.arc-pg-next:hover:not(:disabled) { background: rgba(0, 0, 0, 0.06); }
+.arc-pg-prev:disabled,
+.arc-pg-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* FIXED: was #0000 (fully transparent) */
+.arc-pg-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+.arc-pg-num:hover { background: rgba(0, 0, 0, 0.12); }
+
+/* Active page number */
+.arc-pg-active {
+  background: var(--accent) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,.4);
+}
+
+/* ══════════════════════════════════════════════════════════
+   UNARCHIVE CONFIRM MODAL — dark navy (matches sidebar)
+══════════════════════════════════════════════════════════ */
+
+.arc-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: arcFadeIn 0.18s ease;
+}
+
+@keyframes arcFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Dark navy box — same gradient as sidebar */
+.arc-confirm-box {
+  background: linear-gradient(160deg, #1e2d7d 0%, #0f1a5c 60%, #0a1040 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 40px 36px 32px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  animation: arcSlideUp 0.22s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+@keyframes arcSlideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* Icon circle */
+.arc-confirm-icon-wrap {
+  width: 66px;
+  height: 66px;
+  background: rgba(37, 99, 235, 0.2);
+  border: 2px solid rgba(37, 99, 235, 0.45);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.arc-confirm-icon {
+  font-size: 1.7rem;
+  color: #93c5fd;
+}
+
+/* Title */
+.arc-confirm-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Message */
+.arc-confirm-msg {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.7;
+  margin: 0 0 6px;
+  font-family: 'Nunito', sans-serif;
+}
+.arc-confirm-msg strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Button row */
+.arc-confirm-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.arc-confirm-no,
+.arc-confirm-yes {
+  flex: 1;
+  height: 46px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  border: none;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+/* No, Cancel — frosted glass */
+.arc-confirm-no {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+}
+.arc-confirm-no:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+/* Yes, Unarchive — blue glow */
+.arc-confirm-yes {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
+}
+.arc-confirm-yes:hover {
+  background: var(--accent-h);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(37, 99, 235, 0.55);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .arc-main { margin-left: 0; padding: 16px; }
+}

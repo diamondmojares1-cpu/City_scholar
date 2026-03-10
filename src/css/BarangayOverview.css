@@ -1,0 +1,644 @@
+/* ═══════════════════════════════════════════════════════════
+   BarangayOverview.css — matches screenshot exactly
+   Layout: sidebar (fixed 210px) | topbar row | map + right panel
+═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ── Root wrapper ─────────────────────────────────────────── */
+
+.barangay-container {
+    display: flex;
+    min-height: 100vh;
+    background: #eef0f5;
+    font-family: 'Nunito', sans-serif;
+}
+
+
+/* ── Main area (sits right of fixed sidebar) ─────────────── */
+
+.barangay-main {
+    margin-left: 210px;
+    width: calc(100% - 210px);
+    min-height: 100vh;
+    padding: 20px 22px 40px;
+    display: flex;
+    flex-direction: column;
+    background: #eef0f5;
+}
+
+
+/* ── Overview container ──────────────────────────────────── */
+
+.overview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+}
+
+
+/* ── Top row: title + search ─────────────────────────────── */
+
+.overview-container>h2 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1f2b6c;
+    line-height: 1.2;
+    margin-bottom: 0;
+}
+
+.overview-container>p {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+
+/* Top header row (title/subtitle on left, search on right) */
+
+.brgy-toprow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.brgy-search-box {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: #fff;
+    border-radius: 50px;
+    padding: 0 18px;
+    height: 40px;
+    width: 260px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    flex-shrink: 0;
+}
+
+.brgy-search-box svg {
+    color: #9ca3af;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.brgy-search-box input {
+    border: none;
+    outline: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    background: transparent;
+    width: 100%;
+}
+
+.brgy-search-box input::placeholder {
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+
+/* ── Content wrapper: map (left, 2fr) + right panel (1fr) ── */
+
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    flex: 1;
+    align-items: start;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   MAP CARD — tall, fills the left column
+═══════════════════════════════════════════════════════════ */
+
+.map-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 14px 14px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    display: flex;
+    flex-direction: column;
+    /* Match screenshot height — map fills the full content area */
+    height: calc(100vh - 130px);
+    min-height: 580px;
+    overflow: hidden;
+}
+
+.map-card h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1f2b6c;
+    margin-bottom: 10px;
+    padding: 0 4px;
+}
+
+.map-wrapper {
+    flex: 1;
+    min-height: 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.map-wrapper>div {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 12px;
+}
+
+
+/* Map legend at bottom */
+
+.map-legend {
+    display: flex;
+    gap: 14px;
+    padding: 10px 4px 12px;
+    flex-wrap: wrap;
+}
+
+.map-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.map-legend-dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   RIGHT PANEL
+═══════════════════════════════════════════════════════════ */
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   TABLE CARD (top of right panel — matches screenshot)
+   Dark navy header, scrollable rows
+═══════════════════════════════════════════════════════════ */
+
+.table-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+}
+
+.table-card h3 {
+    font-size: 14px;
+    color: #1f2b6c;
+    font-weight: 800;
+    padding: 16px 18px 12px;
+}
+
+
+/* brgy-table-header inside table-card */
+
+.brgy-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px 10px;
+}
+
+.brgy-table-header h3 {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: #1f2b6c;
+}
+
+.brgy-total-badge {
+    background: #eef2ff;
+    color: #3949ab;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+
+/* TABLE — dark navy header like screenshot */
+
+.table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.table-card thead {
+    background: #1f2b6c;
+}
+
+.table-card th {
+    padding: 11px 16px;
+    color: #fff;
+    font-weight: 800;
+    font-size: 12.5px;
+    text-align: left;
+    white-space: nowrap;
+    border-radius: 0;
+}
+
+.table-card tbody tr {
+    border-bottom: 1px solid #f1f3f8;
+    transition: background 0.15s;
+}
+
+.table-card tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table-card td {
+    padding: 9px 16px;
+    color: #374151;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.table-card tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.table-card tbody tr:hover {
+    background: #eef2ff;
+}
+
+
+/* Count pill inside table */
+
+.brgy-count-pill {
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+
+/* View button — blue pill like screenshot */
+
+.view-btn {
+    background: linear-gradient(90deg, #4e73df, #1f2b6c);
+    border: none;
+    padding: 6px 18px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.view-btn:hover {
+    opacity: 0.85;
+}
+
+
+/* Scrollable table body */
+
+.table-card .table-scroll-body {
+    max-height: 280px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   CHART CARD (bottom of right panel — bar chart)
+═══════════════════════════════════════════════════════════ */
+
+.chart-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 16px 16px 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+}
+
+.chart-card h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1f2b6c;
+    margin-bottom: 12px;
+}
+
+.barangay-bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 160px;
+    padding-bottom: 2px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.barangay-bar-column {
+    flex: 1;
+    min-width: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+    gap: 3px;
+}
+
+.barangay-bar-count {
+    font-size: 10px;
+    font-weight: 800;
+    color: #1f2b6c;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.barangay-bar {
+    width: 100%;
+    max-width: 44px;
+    border-radius: 6px 6px 0 0;
+    background: #1f2b6c;
+    min-height: 4px;
+    transition: background 0.2s;
+}
+
+.barangay-bar-column:hover .barangay-bar {
+    background: #3949ab;
+}
+
+.barangay-bar-label {
+    font-size: 9px;
+    margin-top: 3px;
+    color: #6b7280;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 52px;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════════════ */
+
+.brgy-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.brgy-modal {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 750px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+    overflow: hidden;
+}
+
+.brgy-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #1f2b6c, #3949ab);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.brgy-modal-head-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brgy-modal-icon {
+    font-size: 26px;
+    opacity: 0.85;
+}
+
+.brgy-modal-head-left h2 {
+    margin: 0 0 3px;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.brgy-modal-head-left p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.75;
+}
+
+.brgy-close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.brgy-close-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.brgy-modal-body {
+    overflow-y: auto;
+    flex: 1;
+    padding: 18px 22px;
+}
+
+.brgy-empty {
+    text-align: center;
+    color: #9ca3af;
+    padding: 40px;
+    font-size: 14px;
+}
+
+.brgy-student-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.brgy-student-table th {
+    text-align: left;
+    padding: 10px 13px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.brgy-student-table td {
+    padding: 12px 13px;
+    color: #374151;
+    border-bottom: 1px solid #f3f4f6;
+    font-weight: 600;
+}
+
+.brgy-student-table tr:hover td {
+    background: #f9fafb;
+}
+
+.brgy-student-name {
+    color: #1f2b6c !important;
+    font-weight: 700 !important;
+}
+
+.brgy-modal-footer {
+    padding: 14px 22px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.brgy-close-action-btn {
+    padding: 10px 26px;
+    background: #1f2b6c;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.brgy-close-action-btn:hover {
+    background: #3949ab;
+}
+
+
+/* ── Status Badges ───────────────────────────────────────── */
+
+.brgy-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+}
+
+.brgy-badge-approved {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.brgy-badge-pending {
+    background: #fef9c3;
+    color: #ca8a04;
+}
+
+.brgy-badge-rejected {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1100px) {
+    .content-wrapper {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 860px) {
+    .barangay-main {
+        margin-left: 0;
+        width: 100%;
+        padding: 14px 14px 32px;
+    }
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .map-card {
+        height: 420px;
+        min-height: 380px;
+    }
+}
+
+@media (max-width: 560px) {
+    .brgy-search-box {
+        width: 100%;
+    }
+    .barangay-bar-chart {
+        gap: 5px;
+    }
+}

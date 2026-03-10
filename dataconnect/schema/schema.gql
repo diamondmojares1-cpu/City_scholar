@@ -1,0 +1,48 @@
+type User @table {
+  email: String!
+  passwordHash: String!
+  role: String!
+  createdAt: Timestamp!
+  firstName: String
+  lastName: String
+  phone: String
+  address: String
+  dateOfBirth: Date
+}
+
+type Scholarship @table {
+  name: String!
+  description: String!
+  eligibilityCriteria: String!
+  applicationDeadline: Timestamp!
+  createdAt: Timestamp!
+  maxAwardAmount: Float
+  requiredDocuments: [String]
+}
+
+type Application @table {
+  status: String!
+  submissionDate: Timestamp!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  essayText: String
+  gpa: Float
+  applicant: User
+  scholarship: Scholarship
+}
+
+type Document @table {
+  fileName: String!
+  fileUrl: String!
+  documentType: String!
+  uploadedAt: Timestamp!
+  application: Application
+}
+
+type ApplicationUpdate @table {
+  message: String!
+  updateType: String!
+  createdAt: Timestamp!
+  application: Application
+  admin: User
+}

@@ -1,0 +1,619 @@
+/* ── Layout ─────────────────────────────────────────────── */
+
+.ma-container {
+    display: flex;
+    min-height: 100vh;
+    background: #f0f2f8;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.ma-main {
+    flex: 1;
+    width: 1200px;
+    margin-left: 220px;
+    padding: 32px 36px;
+    overflow-y: auto;
+}
+
+
+/* ── Topbar ─────────────────────────────────────────────── */
+
+.ma-topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.ma-page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 4px;
+}
+
+.ma-page-sub {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.ma-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.ma-add-btn:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+}
+
+.ma-add-btn:active {
+    transform: translateY(0);
+}
+
+
+/* ── Stat Cards ─────────────────────────────────────────── */
+
+.ma-stat-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.ma-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    border-left: 4px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ma-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.ma-stat-admin {
+    border-left-color: #4f46e5;
+}
+
+.ma-stat-staff {
+    border-left-color: #0ea5e9;
+}
+
+.ma-stat-super {
+    border-left-color: #8b5cf6;
+}
+
+.ma-stat-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.ma-stat-admin .ma-stat-icon-wrap {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.ma-stat-staff .ma-stat-icon-wrap {
+    background: #e0f2fe;
+    color: #0ea5e9;
+}
+
+.ma-stat-super .ma-stat-icon-wrap {
+    background: #f5f3ff;
+    color: #8b5cf6;
+}
+
+.ma-stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ma-stat-num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.ma-stat-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+
+/* ── Table Section ──────────────────────────────────────── */
+
+.ma-table-section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+}
+
+.ma-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.ma-search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 9px 14px;
+    width: 300px;
+}
+
+.ma-search-box input {
+    border: none;
+    background: transparent;
+    font-size: 0.875rem;
+    color: #0f172a;
+    outline: none;
+    width: 100%;
+}
+
+.ma-search-icon {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.ma-count-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.ma-table-box {
+    overflow-x: auto;
+}
+
+.ma-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.ma-table thead tr {
+    background: #f8fafc;
+}
+
+.ma-table th {
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.ma-table td {
+    padding: 14px 20px;
+    color: #334155;
+    border-bottom: 1px solid #f8fafc;
+    vertical-align: middle;
+}
+
+.ma-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ma-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.ma-row-super {
+    background: #faf5ff !important;
+}
+
+.ma-row-super:hover {
+    background: #f5f0ff !important;
+}
+
+.ma-td-num {
+    color: #94a3b8;
+    font-weight: 600;
+    width: 48px;
+}
+
+.ma-td-email {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.ma-td-date {
+    color: #64748b;
+    font-size: 0.82rem;
+}
+
+.ma-email-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #818cf8);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.ma-table-empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 48px !important;
+    font-size: 0.9rem;
+}
+
+
+/* ── Role Badges ────────────────────────────────────────── */
+
+.ma-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.badge-super {
+    background: #f5f3ff;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+}
+
+.badge-admin {
+    background: #eef2ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
+}
+
+.badge-staff {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+
+/* ── Delete Button ──────────────────────────────────────── */
+
+.ma-delete-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid #fee2e2;
+    background: #fff5f5;
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    font-size: 0.8rem;
+}
+
+.ma-delete-btn:hover {
+    background: #fee2e2;
+    transform: scale(1.05);
+}
+
+
+/* ── Modal ──────────────────────────────────────────────── */
+
+.ma-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.ma-modal {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    width: 420px;
+    max-width: 95vw;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: ma-pop 0.2s ease;
+}
+
+@keyframes ma-pop {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.ma-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.ma-modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ma-modal-icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #eef2ff;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.ma-modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.ma-modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.ma-modal-close:hover {
+    background: #f1f5f9;
+}
+
+.ma-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ma-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ma-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ma-field-icon {
+    color: #6366f1;
+}
+
+.ma-field input,
+.ma-field select {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 0.15s;
+    background: #f8fafc;
+}
+
+.ma-field input:focus,
+.ma-field select:focus {
+    border-color: #6366f1;
+    background: #fff;
+}
+
+.ma-pass-wrap {
+    position: relative;
+}
+
+.ma-pass-wrap input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 40px;
+}
+
+.ma-eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.ma-error {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.ma-success {
+    color: #22c55e;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.ma-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.ma-btn-cancel {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.ma-btn-cancel:hover {
+    background: #f8fafc;
+}
+
+.ma-btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: #4f46e5;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.ma-btn-submit:hover {
+    background: #4338ca;
+}
+
+.ma-btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* Delete modal */
+
+.ma-del-modal {
+    text-align: center;
+    padding: 36px 28px;
+}
+
+.ma-del-icon-wrap {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin: 0 auto 16px;
+}
+
+.ma-del-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 10px;
+}
+
+.ma-del-msg {
+    font-size: 0.875rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0 0 24px;
+}
+
+.ma-btn-delete {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.ma-btn-delete:hover {
+    background: #dc2626;
+}
+
+.ma-btn-delete:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ── Responsive ─────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .ma-main {
+        padding: 20px 16px;
+    }
+    .ma-stat-cards {
+        grid-template-columns: 1fr;
+    }
+    .ma-topbar {
+        flex-direction: column;
+        gap: 14px;
+    }
+}

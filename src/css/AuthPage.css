@@ -1,0 +1,714 @@
+/* ═══════════════════════════════════════════════════════════
+   AuthPage.css — City Scholar
+   Clean single file — fixes height cutoff & spacing issues
+═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
+/* ── Reset ──────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+
+/* ── Body ───────────────────────────────────────────────── */
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #2b2f4a, #1c1f33);
+    min-height: 100vh;
+    color: #fff;
+    /* IMPORTANT: allow scrolling so content never gets cut off */
+    overflow-y: auto;
+}
+
+
+/* ── Root centering ─────────────────────────────────────── */
+
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* NOT center — so tall forms don't clip */
+    min-height: 100%;
+    padding: 40px 20px;
+}
+
+.bg {
+    min-height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg, #050d2e 0%, #0a1550 40%, #0d1b6e 70%, #091040 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   CARD
+══════════════════════════════════════════════════════════ */
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    /* ❌ REMOVED: height: 600px — this was causing the cutoff */
+    /* ✅ height is now auto — grows with content */
+    min-height: 560px;
+    background: #1e223a;
+    border-radius: 15px;
+    display: flex;
+    margin-top: 150px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   LEFT PANEL
+══════════════════════════════════════════════════════════ */
+
+.left {
+    width: 38%;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #2f3b8f, #1b2250);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 24px;
+    gap: 16px;
+    /* Stretch to match right panel height */
+    align-self: stretch;
+}
+
+.left img {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+}
+
+.left h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   RIGHT PANEL
+   KEY FIX: no fixed height, padding on all sides, scrollable
+══════════════════════════════════════════════════════════ */
+
+.right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Equal padding on all sides — fixes bottom cutoff */
+    padding: 48px 50px;
+    overflow-y: auto;
+}
+
+.right h2 {
+    font-size: 2rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 0;
+    margin-bottom: 24px;
+    letter-spacing: -0.3px;
+}
+
+
+/* ── Form ───────────────────────────────────────────────── */
+
+.right form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+
+/* ── Field group ────────────────────────────────────────── */
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.field-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.2px;
+}
+
+
+/* ── Inputs ─────────────────────────────────────────────── */
+
+.right input[type="text"],
+.right input[type="email"],
+.right input[type="password"] {
+    width: 100%;
+    height: 46px;
+    background: #2a2f55;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 0 16px;
+    font-size: 14px;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    appearance: none;
+}
+
+.right input[type="text"]:focus,
+.right input[type="email"]:focus,
+.right input[type="password"]:focus {
+    border-color: #5b6cff;
+    box-shadow: 0 0 0 3px rgba(91, 108, 255, 0.2);
+}
+
+.right input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 500;
+}
+
+.right input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* Red border for invalid fields */
+
+.right input.input-error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18) !important;
+}
+
+
+/* ── Password eye toggle ────────────────────────────────── */
+
+.password-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrap input {
+    padding-right: 48px;
+}
+
+.eye-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    transition: color 0.15s;
+    line-height: 0;
+    /* Override global button styles */
+    margin-top: 0 !important;
+}
+
+.eye-btn:hover {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.eye-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+
+/* ── Per-field error ────────────────────────────────────── */
+
+.field-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fca5a5;
+    line-height: 1.4;
+}
+
+.field-error svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+
+/* ── Forgot password ────────────────────────────────────── */
+
+.forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -4px;
+}
+
+.forgot-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: color 0.15s;
+    user-select: none;
+}
+
+.forgot-link:hover {
+    color: #fff;
+}
+
+
+/* ── Error / info banners ───────────────────────────────── */
+
+.error {
+    background: rgba(239, 68, 68, 0.14);
+    border: 1px solid rgba(239, 68, 68, 0.38);
+    color: #fca5a5;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.info {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    color: #86efac;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   BUTTONS
+   KEY FIX: override global "button { margin-top: 20px }"
+   that was pushing buttons down and eating bottom space
+══════════════════════════════════════════════════════════ */
+
+
+/* Reset global button style that causes issues */
+
+.right button,
+.verify-screen button {
+    margin-top: 0;
+}
+
+.btn-primary {
+    width: 100%;
+    height: 48px;
+    background: #5b6cff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+    box-shadow: 0 4px 18px rgba(91, 108, 255, 0.4);
+    padding: 0;
+    margin-top: 4px;
+    /* small consistent spacing */
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #4a5bf0;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(91, 108, 255, 0.5);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.btn-create {
+    width: 100%;
+    height: 48px;
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s, border-color 0.18s, transform 0.12s;
+    padding: 0;
+    margin-top: 0;
+}
+
+.btn-create:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-create:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* ── Spinner ────────────────────────────────────────────── */
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ── Switch / divider ───────────────────────────────────── */
+
+.switch {
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+    text-align: center;
+}
+
+.switch span {
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    user-select: none;
+}
+
+.switch span:hover {
+    opacity: 0.75;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-divider span {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.28);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   PASSWORD STRENGTH
+══════════════════════════════════════════════════════════ */
+
+.strength-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.strength-bar {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+}
+
+.strength-segment {
+    height: 5px;
+    flex: 1;
+    border-radius: 4px;
+    transition: background 0.25s;
+}
+
+.strength-label {
+    font-size: 11.5px;
+    font-weight: 800;
+    min-width: 76px;
+    text-align: right;
+    transition: color 0.25s;
+}
+
+.pass-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.pass-rules span {
+    font-size: 12px;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.rule-ok {
+    color: #86efac;
+}
+
+.rule-fail {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   EMAIL VERIFY SCREEN (Step 2)
+══════════════════════════════════════════════════════════ */
+
+.verify-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    width: 100%;
+    /* Add bottom padding so nothing clips */
+    padding-bottom: 8px;
+}
+
+.verify-screen h2 {
+    margin-bottom: 0;
+}
+
+.verify-icon-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.verify-icon-svg {
+    width: 90px;
+    height: 90px;
+    filter: drop-shadow(0 4px 16px rgba(34, 197, 94, 0.35));
+    animation: verifyPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes verifyPop {
+    from {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.verify-msg {
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.58);
+    font-weight: 500;
+    line-height: 1.75;
+}
+
+.verify-msg strong {
+    color: #fff;
+    font-weight: 800;
+}
+
+.verify-waiting {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    padding: 9px 18px;
+}
+
+.verify-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: dotPulse 1.4s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+.verify-dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.verify-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.verify-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+    0%,
+    80%,
+    100% {
+        transform: scale(0.7);
+        opacity: 0.4;
+    }
+    40% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+.verify-waiting-text {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.resend-row {
+    text-align: center;
+}
+
+.resend-timer {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.38);
+    font-weight: 600;
+}
+
+.resend-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: #93c5fd;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.15s;
+    user-select: none;
+}
+
+.resend-link:hover {
+    color: #fff;
+}
+
+.spam-note {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.38);
+    line-height: 1.5;
+}
+
+.spam-note strong {
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.back-link {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: color 0.15s;
+    user-select: none;
+}
+
+.back-link:hover {
+    color: #fff;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    #root {
+        padding: 24px 16px;
+    }
+    .container {
+        flex-direction: column;
+        max-width: 480px;
+        min-height: unset;
+    }
+    .left {
+        width: 100%;
+        flex-direction: row;
+        padding: 24px;
+        gap: 14px;
+        align-self: auto;
+    }
+    .left img {
+        width: 56px;
+        height: 56px;
+    }
+    .left h2 {
+        font-size: 16px;
+    }
+    .right {
+        padding: 36px 28px 40px;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    #root {
+        padding: 16px 12px;
+    }
+    .right {
+        padding: 28px 20px 36px;
+    }
+    .right h2 {
+        font-size: 1.5rem;
+    }
+    .btn-primary,
+    .btn-create {
+        height: 44px;
+        font-size: 14px;
+    }
+}
