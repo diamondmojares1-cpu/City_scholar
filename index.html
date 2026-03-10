@@ -6,6 +6,10 @@
     <link rel="icon" type="image/png" href="../assets/cityscholar.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>city_scholar</title>
+    <script>
+        var p = new URLSearchParams(window.location.search).get('p');
+        if (p) window.history.replaceState(null, null, '/City_scholar/' + p);
+    </script>
 </head>
 
 <body>
