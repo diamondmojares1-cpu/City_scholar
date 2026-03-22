@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   SCHOLARS PAGE — COMPLETE CSS (Layout Fix)
+   SCHOLARS PAGE — COMPLETE CSS
    Replace entire src/css/Scholars.css with this file
 ═══════════════════════════════════════════════════════════ */
 
@@ -51,6 +51,7 @@
     justify-content: space-between;
     padding: 24px 28px 12px;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .sa-table-title {
@@ -64,6 +65,49 @@
     font-size: 0.8rem;
     color: #94a3b8;
     margin: 0;
+}
+
+
+/* Right side of header — floating actions + count badge */
+
+.sa-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+
+/* Floating action bar — shows only when rows are checked */
+
+.sa-float-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0f4ff;
+    border: 1.5px solid #c7d2fe;
+    border-radius: 12px;
+    padding: 6px 12px;
+    animation: sa-fade-in 0.18s ease;
+}
+
+@keyframes sa-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sa-float-count {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #4338ca;
+    white-space: nowrap;
 }
 
 .sa-count-badge {
@@ -179,6 +223,16 @@
 }
 
 
+/* Checkbox column in header */
+
+.sa-th-check {
+    width: 44px;
+    min-width: 44px;
+    padding: 14px 0 14px 16px !important;
+    text-align: center !important;
+}
+
+
 /* Wider action column */
 
 .sa-table thead th:last-child {
@@ -211,11 +265,28 @@
     color: #0f172a !important;
 }
 
+.sa-td-check {
+    width: 44px;
+    min-width: 44px;
+    padding: 13px 0 13px 16px !important;
+    text-align: center;
+}
+
 .sa-empty {
     text-align: center;
     padding: 44px !important;
     color: #94a3b8;
     font-size: 0.9rem;
+}
+
+
+/* Checkbox styling */
+
+.sa-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #4f46e5;
 }
 
 
@@ -310,7 +381,7 @@
 }
 
 
-/* View — solid navy blue */
+/* View */
 
 .sa-btn-view {
     background: #1e2d7d;
@@ -323,7 +394,7 @@
 }
 
 
-/* Promote — indigo/purple gradient */
+/* Promote */
 
 .sa-btn-promote {
     background: linear-gradient(135deg, #6366f1, #4f46e5);
@@ -337,7 +408,7 @@
 }
 
 
-/* Archive — soft red outlined */
+/* Archive */
 
 .sa-btn-archive {
     background: #fff3f0;
@@ -352,7 +423,7 @@
 }
 
 
-/* Cancel */
+/* Cancel / Clear */
 
 .sa-btn-cancel {
     background: #f1f5f9;
@@ -531,9 +602,6 @@
 .sa-modal-close:hover {
     background: rgba(255, 255, 255, 0.22);
 }
-
-
-/* Renewal access badge inside modal header */
 
 .sa-renewal-access-badge {
     display: inline-flex;
@@ -737,9 +805,6 @@
     }
 }
 
-
-/* Icon circle base */
-
 .sa-confirm-icon {
     width: 68px;
     height: 68px;
@@ -750,14 +815,10 @@
     font-size: 1.8rem;
     flex-shrink: 0;
     margin-bottom: 4px;
-    /* Archive = orange (default) */
     background: rgba(234, 88, 12, 0.18);
     border: 2px solid rgba(234, 88, 12, 0.4);
     color: #fb923c;
 }
-
-
-/* Promote icon override — purple */
 
 .sa-confirm-icon.sa-promote-icon {
     background: rgba(124, 58, 237, 0.15);
@@ -808,9 +869,6 @@
     gap: 7px;
 }
 
-
-/* No, Cancel */
-
 .sa-confirm-no {
     background: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.85);
@@ -821,9 +879,6 @@
     background: rgba(255, 255, 255, 0.18);
     color: #fff;
 }
-
-
-/* Yes, Archive — orange */
 
 .sa-confirm-yes {
     background: #2563eb;
@@ -836,9 +891,6 @@
     transform: translateY(-1px);
     box-shadow: 0 6px 22px rgba(37, 99, 235, 0.55);
 }
-
-
-/* Yes, Promote — indigo gradient */
 
 .sa-confirm-yes.sa-confirm-promote {
     background: linear-gradient(135deg, #6366f1, #4f46e5);

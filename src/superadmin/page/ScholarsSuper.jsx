@@ -64,7 +64,10 @@ export default function ScholarsSuper() {
     async function load() {
       setLoading(true); setError(null);
       try {
-        const [appSnap, renewalSnap] = await Promise.all([getDocs(collection(db,"scholarship_applications")), getDocs(collection(db,"renewals"))]);
+        const [appSnap, renewalSnap] = await Promise.all([
+          getDocs(collection(db,"scholarship_applications")),
+          getDocs(collection(db,"scholar_renewals"))
+        ]);
         const newList=[]; const oldList=[];
         appSnap.docs.forEach(docSnap => {
           const raw=docSnap.data(); if (raw.archived===true) return;

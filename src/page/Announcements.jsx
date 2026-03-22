@@ -5,11 +5,11 @@ import {
   FaTrash, FaSpinner, FaImage, FaTimes, FaCalendarAlt,
   FaBullhorn, FaChevronDown, FaChevronUp, FaUpload,
   FaEye, FaUsers, FaFileAlt, FaToggleOn, FaToggleOff,
-  FaCheckCircle, FaCamera,
+  FaCheckCircle, FaCamera, FaExternalLinkAlt,
 } from "react-icons/fa";
 import {
   collection, getDocs, addDoc, deleteDoc,
-  doc, updateDoc, orderBy, query, setDoc, getDoc,
+  doc, updateDoc, orderBy, query, setDoc, getDoc, where,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import "../css/Announcements.css";
@@ -77,7 +77,7 @@ function formatShort(ms) {
   return new Date(Number(ms)).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 function formatDateTime(ms) {
-  if (!ms) return "";
+  if (!ms) return "—";
   return new Date(Number(ms)).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 }
 function getInitials(name = "") {
@@ -196,7 +196,7 @@ function MiniCalendar({ announcements, selectedDate, onSelectDate }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Add / Edit Modal — with Attendance Proof toggle
+// Add / Edit Modal
 // ─────────────────────────────────────────────────────────────
 function AnnouncementModal({ onClose, onSave, initial }) {
   const [title,              setTitle]   = useState(initial?.title              || "");
@@ -281,7 +281,6 @@ function AnnouncementModal({ onClose, onSave, initial }) {
             )}
           </div>
 
-          {/* ── Attendance Proof Toggle ── */}
           <div className="ann-modal-field">
             <div className="ann-attendance-toggle-wrap">
               <div className="ann-attendance-toggle-info">
@@ -330,37 +329,43 @@ function AnnouncementModal({ onClose, onSave, initial }) {
 // ─────────────────────────────────────────────────────────────
 // View Submission Modal
 // ─────────────────────────────────────────────────────────────
-function ViewSubmissionModal({ completion, onClose }) {
+function ViewSubmissionModal({ submission, onClose }) {
   return (
     <div className="ann-modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="ann-modal-box">
         <div className="ann-modal-header">
           <h3 className="ann-modal-title">
             <FaFileAlt className="ann-modal-title-icon" />
-            Attendance Proof — {completion.userName}
+            Attendance Proof — {submission.userName}
           </h3>
           <button className="ann-modal-close" onClick={onClose}><FaTimes /></button>
         </div>
         <div className="ann-modal-fields">
           <div className="sub-info-row">
-            <Avatar name={completion.userName} photoURL={completion.photoURL} size={48} />
+            <Avatar name={submission.userName} size={48} />
             <div className="sub-info-text">
-              <span className="sub-info-name">{completion.userName || "Unknown Scholar"}</span>
-              <span className="sub-info-time">Submitted: {formatDateTime(completion.completedAt || completion.submittedAt)}</span>
+              <span className="sub-info-name">{submission.userName || "Unknown Scholar"}</span>
+              <span className="sub-info-sub">Barangay: {submission.barangay || "Unknown"}</span>
+              <span className="sub-info-time">Submitted: {formatDateTime(submission.submittedAt)}</span>
             </div>
           </div>
-          {completion.fileURL ? (
+          {submission.fileUrl ? (
             <div className="sub-file-wrap">
-              <p className="sub-file-label">Submitted Photo / Proof</p>
-              <img src={completion.fileURL} alt="submission" className="sub-file-img" />
-              <a href={completion.fileURL} target="_blank" rel="noreferrer" className="sub-open-btn">
-                <FaEye /> Open Full Image
+              <p className="sub-file-label">Submitted Proof / File</p>
+              <a
+                href={submission.fileUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="sub-open-btn"
+              >
+                <FaExternalLinkAlt /> Open File
               </a>
+              <p className="sub-file-name">{submission.fileName || "Attachment"}</p>
             </div>
           ) : (
             <div className="sub-no-file">
               <FaImage className="sub-no-file-icon" />
-              <p>No photo submitted yet.</p>
+              <p>No file submitted.</p>
             </div>
           )}
         </div>
@@ -373,7 +378,10 @@ function ViewSubmissionModal({ completion, onClose }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Attendance Submissions Table
+// ✅ FIXED: Attendance Submissions Table
+//    Reads from user_announcements_upload (flat collection)
+//    Fetches barangay from users/{userId}
+//    Displays: Name, Date Submitted, Barangay, Open button
 // ─────────────────────────────────────────────────────────────
 function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
   const [submissions, setSubmissions] = useState([]);
@@ -387,14 +395,66 @@ function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
   useEffect(() => {
     if (!annId) return;
     setLoading(true);
-    getDocs(collection(db, colName, annId, "attendance_proofs"))
-      .then(snap => setSubmissions(snap.docs.map(d => ({ id: d.id, ...d.data() }))))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [annId, colName]);
+
+    (async () => {
+      try {
+        // ✅ Read from user_announcements_upload flat collection
+        // Filter by announcementId matching current announcement
+        const uploadsSnap = await getDocs(
+          query(
+            collection(db, "user_announcements_upload"),
+            where("announcementId", "==", annId)
+          )
+        );
+
+        const rawDocs = uploadsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // ✅ Fetch barangay from users/{userId} for each submission
+        const enriched = await Promise.all(
+          rawDocs.map(async (sub) => {
+            let barangay = sub.barangay || "Unknown";
+            const userId = sub.userId || "";
+
+            if (userId && barangay === "Unknown") {
+              try {
+                const userSnap = await getDoc(doc(db, "users", userId));
+                if (userSnap.exists()) {
+                  const userData = userSnap.data();
+                  barangay =
+                    userData.barangay ||
+                    userData.personalInfo?.barangay ||
+                    "Unknown";
+                }
+              } catch (_) {
+                // user doc read failed — keep "Unknown"
+              }
+            }
+
+            return {
+              ...sub,
+              barangay,
+              userName:    sub.userName    || "Unknown",
+              fileUrl:     sub.fileUrl     || sub.fileURL || "",
+              fileName:    sub.fileName    || "Attachment",
+              submittedAt: sub.timestamp   || sub.createdAt || Date.now(),
+            };
+          })
+        );
+
+        // Sort newest first
+        enriched.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+        setSubmissions(enriched);
+      } catch (err) {
+        console.error("Attendance load error", err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [annId]);
 
   const filtered = submissions.filter(c =>
-    (c.userName || "").toLowerCase().includes(search.toLowerCase())
+    (c.userName || "").toLowerCase().includes(search.toLowerCase()) ||
+    (c.barangay || "").toLowerCase().includes(search.toLowerCase())
   );
 
   async function handleToggle() {
@@ -413,7 +473,7 @@ function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
     <>
       <div className="comp-section">
 
-        {/* Header with open/close toggle */}
+        {/* Header */}
         <div className="comp-section-header">
           <div className="comp-section-title-row">
             <FaCamera className="comp-section-icon" />
@@ -421,11 +481,9 @@ function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
             <span className="comp-count-badge">{submissions.length} submitted</span>
           </div>
           <div className="att-header-right">
-            <div className="att-status-badge-wrap">
-              <span className={`att-open-badge ${attendanceOpen ? "open" : "closed"}`}>
-                {attendanceOpen ? "● Submissions Open" : "● Submissions Closed"}
-              </span>
-            </div>
+            <span className={`att-open-badge ${attendanceOpen ? "open" : "closed"}`}>
+              {attendanceOpen ? "● Submissions Open" : "● Submissions Closed"}
+            </span>
             <button
               className={`att-toggle-btn ${attendanceOpen ? "close-btn" : "open-btn"}`}
               onClick={handleToggle}
@@ -435,8 +493,7 @@ function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
                 ? <FaSpinner className="ann-spinner" />
                 : attendanceOpen
                   ? <><FaToggleOn /> Close</>
-                  : <><FaToggleOff /> Open</>
-              }
+                  : <><FaToggleOff /> Open</>}
             </button>
           </div>
         </div>
@@ -444,14 +501,18 @@ function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
         {/* Search */}
         <div className="comp-search-box" style={{ margin: "10px 0" }}>
           <FaSearch className="comp-search-icon" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search scholar..." />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by name or barangay..."
+          />
         </div>
 
-        {/* Status info */}
+        {/* Status Banner */}
         <div className={`att-info-banner ${attendanceOpen ? "open" : "closed"}`}>
           {attendanceOpen
-            ? "✅ Students can currently submit their attendance photo for this event."
-            : "🔒 Submissions are closed. Students can no longer submit photos for this event."}
+            ? "✅ Students can currently submit their attendance proof for this event."
+            : "🔒 Submissions are closed. Students can no longer submit proofs for this event."}
         </div>
 
         {/* Table */}
@@ -460,36 +521,45 @@ function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
         ) : filtered.length === 0 ? (
           <div className="comp-empty">
             <FaCamera className="comp-empty-icon" />
-            <p>{search ? "No scholar matched." : "No attendance photos submitted yet."}</p>
+            <p>{search ? "No results found." : "No attendance proofs submitted yet."}</p>
           </div>
         ) : (
           <div className="comp-table-wrap">
             <table className="comp-table">
               <thead>
                 <tr>
-                  <th>#</th><th>Scholar</th><th>Submitted At</th><th>Photo</th><th>Action</th>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Barangay</th>
+                  <th>Date Submitted</th>
+                  <th>Proof</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((c, i) => (
-                  <tr key={c.id}>
+                {filtered.map((sub, i) => (
+                  <tr key={sub.id}>
                     <td className="comp-td-num">{i + 1}</td>
-                    <td>
+                    <td className="comp-td-name">
                       <div className="comp-td-user">
-                        <Avatar name={c.userName || "?"} photoURL={c.photoURL} size={34} />
-                        <span className="comp-td-name">{c.userName || "Unknown"}</span>
+                        <Avatar name={sub.userName} size={30} />
+                        <span>{sub.userName}</span>
                       </div>
                     </td>
-                    <td className="comp-td-time">{formatDateTime(c.submittedAt || c.completedAt)}</td>
+                    <td>{sub.barangay}</td>
+                    <td className="comp-td-time">{formatDateTime(sub.submittedAt)}</td>
                     <td>
-                      {c.fileURL
-                        ? <span className="comp-file-yes">✓ Submitted</span>
-                        : <span className="comp-file-no">— None</span>}
-                    </td>
-                    <td>
-                      <button className="comp-view-btn" onClick={() => setViewing(c)}>
-                        <FaEye /> View
-                      </button>
+                      {sub.fileUrl ? (
+                        <a
+                          href={sub.fileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="comp-view-btn"
+                        >
+                          <FaExternalLinkAlt /> Open
+                        </a>
+                      ) : (
+                        <span className="comp-file-no">— None</span>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -499,19 +569,24 @@ function AttendanceTable({ annId, source, attendanceOpen, onToggleOpen }) {
         )}
       </div>
 
-      {viewing && <ViewSubmissionModal completion={viewing} onClose={() => setViewing(null)} />}
+      {viewing && (
+        <ViewSubmissionModal
+          submission={viewing}
+          onClose={() => setViewing(null)}
+        />
+      )}
     </>
   );
 }
 
 // ─────────────────────────────────────────────────────────────
-// Completions Table (original task completions)
+// Completions Table
 // ─────────────────────────────────────────────────────────────
 function CompletionsTable({ annId }) {
-  const [completions, setCompletions] = useState([]);
-  const [loading,     setLoading]     = useState(true);
-  const [search,      setSearch]      = useState("");
-  const [viewing,     setViewing]     = useState(null);
+  const [completions] = useState([]);
+  const [loading]     = useState(false);
+  const [search]      = useState("");
+  const [viewing]     = useState(null);
 
   useEffect(() => {
     if (!annId) return;
@@ -577,7 +652,7 @@ function CompletionsTable({ annId }) {
           </div>
         )}
       </div>
-      {viewing && <ViewSubmissionModal completion={viewing} onClose={() => setViewing(null)} />}
+      {viewing && <ViewSubmissionModal submission={viewing} onClose={() => setViewing(null)} />}
     </>
   );
 }
@@ -651,7 +726,6 @@ export default function Announcements() {
     await load();
   };
 
-  // ── Update local state when attendance toggle changes ──
   const handleAttendanceToggle = (annId, newValue) => {
     setAnnouncements(prev => prev.map(a => a.id === annId ? { ...a, attendanceOpen: newValue } : a));
     setSelected(prev => prev?.id === annId ? { ...prev, attendanceOpen: newValue } : prev);
@@ -758,11 +832,6 @@ export default function Announcements() {
                   <button className={`ann-tab ${activeTab === "details" ? "active" : ""}`} onClick={() => setActiveTab("details")}>
                     <FaFileAlt /> Details
                   </button>
-                  {selected.source === "calendar_notes" && (
-                    <button className={`ann-tab ${activeTab === "completions" ? "active" : ""}`} onClick={() => setActiveTab("completions")}>
-                      <FaUsers /> Task Completions
-                    </button>
-                  )}
                   {selected.requiresAttendance && (
                     <button className={`ann-tab ${activeTab === "attendance" ? "active" : ""}`} onClick={() => setActiveTab("attendance")}>
                       <FaCamera /> Attendance Proofs
@@ -782,7 +851,7 @@ export default function Announcements() {
                   </div>
                 )}
 
-                {activeTab === "completions" && <CompletionsTable annId={selected.id} />}
+                {activeTab === "completions" && null /* Task completions tab removed */}
 
                 {activeTab === "attendance" && (
                   <AttendanceTable

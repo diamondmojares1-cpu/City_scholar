@@ -78,7 +78,7 @@ function parseArchive(docSnap) {
 // ─────────────────────────────────────────────────────────────
 // Main Component
 // ─────────────────────────────────────────────────────────────
-function Archives() {
+function Archives({ SidebarComponent = Sidebar, activePage = "archives" }) {
   const [archives,       setArchives]       = useState([]);
   const [loading,        setLoading]        = useState(true);
   const [error,          setError]          = useState(null);
@@ -163,7 +163,7 @@ function Archives() {
   // ── Render ────────────────────────────────────────────────
   return (
     <div className="arc-container">
-      <Sidebar activePage="archives" />
+      <SidebarComponent activePage={activePage} />
 
       <main className="arc-main">
 

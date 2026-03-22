@@ -1,10 +1,9 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
-/**
- * Fetch student data from Firestore
- * @returns {Promise<Array>} Array of student objects with their data
- */
+// ─────────────────────────────────────────────────────────
+// Fetch all students from users collection (role === "student")
+// ─────────────────────────────────────────────────────────
 export async function fetchStudents() {
     try {
         const snap = await getDocs(collection(db, "users"));
@@ -15,6 +14,7 @@ export async function fetchStudents() {
                 id: u.id,
                 fullName: u.fullName || "—",
                 course: u.course || "—",
+                semester: u.semester || (u.educationInfo && u.educationInfo.semester) || "—",
                 yearLevel: u.yearLevel || "—",
                 gpa: u.gpa != null ? u.gpa : "—",
                 gwa: u.gwa || u.gpa || "—",
@@ -31,15 +31,10 @@ export async function fetchStudents() {
     }
 }
 
-/**
- * Alias for fetchStudents — used by BarangayOverview and other pages
- */
-export const fetchStudentRecords = fetchApprovedScholarsForBarangay;
-
-/**
- * Fetch APPROVED scholars from scholarship_applications for BarangayOverview.
- * Gets barangay from personalInfo.barangay where status = "approved".
- */
+// ─────────────────────────────────────────────────────────
+// Fetch APPROVED scholars from scholarship_applications
+// Used by BarangayOverview — reads barangay from personalInfo
+// ─────────────────────────────────────────────────────────
 export async function fetchApprovedScholarsForBarangay() {
     try {
         const snap = await getDocs(collection(db, "scholarship_applications"));
@@ -62,6 +57,7 @@ export async function fetchApprovedScholarsForBarangay() {
                     id: app.id,
                     fullName: fullName,
                     course: edu.course || "—",
+                    semester: edu.semester || app.semester || "—",
                     yearLevel: edu.yearLevel || "—",
                     gpa: edu.gwa || "—",
                     gwa: edu.gwa || "—",
@@ -79,27 +75,27 @@ export async function fetchApprovedScholarsForBarangay() {
     }
 }
 
-/**
- * Normalize status string to standard values
- * @param {string} rawStatus - Raw status string from database
- * @returns {string} Normalized status ("approved", "rejected", "missing", "reviewing", "pending")
- */
+// ✅ FIX: Alias defined AFTER the function it references
+// Previously this was placed BEFORE fetchApprovedScholarsForBarangay
+// which caused a ReferenceError / permissions failure
+export const fetchStudentRecords = fetchApprovedScholarsForBarangay;
+
+// ─────────────────────────────────────────────────────────
+// Normalize status string to standard values
+// ─────────────────────────────────────────────────────────
 export function normalizeStatus(rawStatus) {
     const s = (rawStatus + "").toLowerCase();
-
     if (s.includes("approve")) return "approved";
     if (s.includes("reject")) return "rejected";
     if (s.includes("missing") || s.includes("incomplete") || s.includes("require"))
         return "missing";
     if (s.includes("review")) return "reviewing";
-
     return "pending";
 }
 
-/**
- * Fetch and process student data for Renewals page
- * @returns {Promise<{students: Array, counts: Object}>} Students and status counts
- */
+// ─────────────────────────────────────────────────────────
+// Fetch renewals data for Renewals page — reads from users
+// ─────────────────────────────────────────────────────────
 export async function fetchRenewalsData() {
     try {
         const snap = await getDocs(collection(db, "users"));
@@ -113,11 +109,12 @@ export async function fetchRenewalsData() {
             .map((d) => ({ id: d.id, ...d.data() }))
             .filter((u) => u.role === "student")
             .map((u) => {
-                const rawStatus =
-                    (u.renewalStatus ||
-                        u.applicationStatus ||
-                        u.scholarshipStatus ||
-                        "pending") + "";
+                const rawStatus = (
+                    u.renewalStatus ||
+                    u.applicationStatus ||
+                    u.scholarshipStatus ||
+                    "pending"
+                ) + "";
                 const status = normalizeStatus(rawStatus);
 
                 if (status === "approved") approved += 1;
@@ -147,12 +144,9 @@ export async function fetchRenewalsData() {
     }
 }
 
-/**
- * Filter students for Scholars page (new vs old/approved)
- * @param {Array} students - Array of student objects
- * @param {string} filterMode - "old" for approved scholars, "new" for new applicants
- * @returns {Array} Filtered students
- */
+// ─────────────────────────────────────────────────────────
+// Filter students for Scholars page (new vs approved)
+// ─────────────────────────────────────────────────────────
 export function filterScholarsData(students, filterMode) {
     const filtered = students.filter((s) =>
         filterMode === "old" ? s.status === "approved" : s.status !== "approved"
@@ -160,11 +154,9 @@ export function filterScholarsData(students, filterMode) {
     return filtered.slice(0, 30);
 }
 
-/**
- * Get status label for display
- * @param {string} status - Normalized status
- * @returns {string} Human-readable status label
- */
+// ─────────────────────────────────────────────────────────
+// Status label and class helpers
+// ─────────────────────────────────────────────────────────
 export function getStatusLabel(status) {
     const labels = {
         approved: "Approved",
@@ -176,11 +168,6 @@ export function getStatusLabel(status) {
     return labels[status] || "Pending";
 }
 
-/**
- * Get CSS class name for status badge
- * @param {string} status - Normalized status
- * @returns {string} CSS class name
- */
 export function getStatusClass(status) {
     const classes = {
         approved: "approved",
@@ -192,11 +179,9 @@ export function getStatusClass(status) {
     return classes[status] || "pending";
 }
 
-/**
- * Group students by barangay for BarangayOverview
- * @param {Array} students - Array of student objects
- * @returns {Object} Map of barangay name => array of students
- */
+// ─────────────────────────────────────────────────────────
+// Group students by barangay for BarangayOverview
+// ─────────────────────────────────────────────────────────
 export function groupStudentsByBarangay(students) {
     const groupsMap = {};
     students.forEach(function(student) {
@@ -206,7 +191,6 @@ export function groupStudentsByBarangay(students) {
         }
         groupsMap[barangay].push(student);
     });
-    // Return array of { name, totalScholars, students } as expected by BarangayOverview
     return Object.keys(groupsMap)
         .map(function(name) {
             return {

@@ -115,6 +115,52 @@ body {
 }
 
 
+/* ── Tabs (New / Old) ────────────────────────────────────── */
+
+.renewals-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.renewals-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.renewals-tab:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.renewals-tab.active {
+    background: #0f1f3d;
+    border-color: #0f1f3d;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(15, 31, 61, 0.3);
+}
+
+.renewals-tab.active:hover {
+    background: #162444;
+    border-color: #162444;
+    color: #fff;
+}
+
+
 /* ── Table Card ──────────────────────────────────────────── */
 
 .renewals-table-card {
@@ -254,7 +300,7 @@ body {
 
 
 /* ══════════════════════════════════════════════════════════
-   STATUS BADGES  — covers ALL class-name patterns
+   STATUS BADGES
 ══════════════════════════════════════════════════════════ */
 
 .renewals-badge {
@@ -267,9 +313,6 @@ body {
     letter-spacing: .2px;
 }
 
-
-/* ── Approved ─────────────────────────────────────────────── */
-
 .renewals-badge-approved,
 .renewals-badge.renewals-badge-approved,
 .renewals-badge.status-approved,
@@ -280,9 +323,6 @@ body {
     border: 1px solid #bbf7d0;
 }
 
-
-/* ── Pending ──────────────────────────────────────────────── */
-
 .renewals-badge-pending,
 .renewals-badge.renewals-badge-pending,
 .renewals-badge.status-pending,
@@ -292,9 +332,6 @@ body {
     color: #854d0e;
     border: 1px solid #fde68a;
 }
-
-
-/* ── Reviewing / Pending Review ───────────────────────────── */
 
 .renewals-badge-reviewing,
 .renewals-badge.renewals-badge-reviewing,
@@ -308,9 +345,6 @@ body {
     border: 1px solid #bfdbfe;
 }
 
-
-/* ── Rejected ─────────────────────────────────────────────── */
-
 .renewals-badge-rejected,
 .renewals-badge.renewals-badge-rejected,
 .renewals-badge.status-rejected,
@@ -320,9 +354,6 @@ body {
     color: #b91c1c;
     border: 1px solid #fecaca;
 }
-
-
-/* ── Missing ──────────────────────────────────────────────── */
 
 .renewals-badge-missing,
 .renewals-badge.renewals-badge-missing,
@@ -451,587 +482,8 @@ body {
 
 
 /* ══════════════════════════════════════════════════════════
-   MODAL — new design (matches ScholarshipApplications)
+   MODAL
 ══════════════════════════════════════════════════════════ */
-
-
-/* Overlay */
-
-.rnw-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 16px;
-}
-
-
-/* Modal shell */
-
-.rnw-modal {
-    background: #fff;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 860px;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
-    animation: rnwSlideIn 0.2s ease;
-}
-
-@keyframes rnwSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(16px) scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-
-/* Dark header */
-
-.rnw-modal-header {
-    background: #1e2d4d;
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-shrink: 0;
-}
-
-.rnw-modal-avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: #374e7a;
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    letter-spacing: 0.5px;
-}
-
-.rnw-modal-header-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.rnw-modal-name {
-    color: #fff;
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin: 0 0 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.rnw-modal-subtitle {
-    color: #94a3b8;
-    font-size: 0.82rem;
-    margin: 0;
-}
-
-.rnw-modal-header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-}
-
-.rnw-modal-close {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-    border: none;
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s;
-    line-height: 1;
-}
-
-.rnw-modal-close:hover {
-    background: rgba(255, 255, 255, 0.22);
-}
-
-
-/* Scrollable body */
-
-.rnw-modal-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 24px 8px;
-}
-
-
-/* Sections */
-
-.rnw-modal-section {
-    padding: 20px 0 4px;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.rnw-modal-section:last-child {
-    border-bottom: none;
-}
-
-.rnw-section-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-}
-
-.rnw-section-icon {
-    color: #1e3a8a;
-    font-size: 1rem;
-}
-
-.rnw-section-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-
-/* Info grid — card-style fields */
-
-.rnw-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.rnw-info-field {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.rnw-info-label {
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #64748b;
-}
-
-.rnw-info-value {
-    font-size: 0.9rem;
-    color: #1e293b;
-    font-weight: 500;
-}
-
-
-/* Document rows */
-
-.rnw-docs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.rnw-doc-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    text-decoration: none;
-    transition: background 0.15s, border-color 0.15s;
-}
-
-.rnw-doc-link {
-    background: #eff6ff;
-    border-color: #bfdbfe;
-    color: #1d4ed8;
-}
-
-.rnw-doc-link:hover {
-    background: #dbeafe;
-    border-color: #93c5fd;
-}
-
-.rnw-doc-missing {
-    background: #f8fafc;
-    border-color: #e2e8f0;
-    color: #94a3b8;
-}
-
-.rnw-doc-icon {
-    font-size: 0.85rem;
-    flex-shrink: 0;
-}
-
-.rnw-doc-label {
-    flex: 1;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.rnw-doc-ext {
-    font-size: 0.75rem;
-    opacity: 0.7;
-}
-
-.rnw-doc-missing-tag {
-    font-size: 0.72rem;
-    color: #ef4444;
-    background: #fee2e2;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-.rnw-no-docs {
-    font-size: 0.85rem;
-    color: #94a3b8;
-    margin: 0;
-}
-
-
-/* Doc action buttons */
-
-.rnw-doc-actions {
-    display: flex;
-    gap: 6px;
-    margin-left: auto;
-    flex-shrink: 0;
-}
-
-.rnw-doc-btn-preview,
-.rnw-doc-btn-open {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: background 0.15s;
-}
-
-.rnw-doc-btn-preview {
-    background: #fff;
-    border: 1.5px solid #bfdbfe;
-    color: #1d4ed8;
-}
-
-.rnw-doc-btn-preview:hover {
-    background: #dbeafe;
-}
-
-.rnw-doc-btn-open {
-    background: #1e3a8a;
-    border: none;
-    color: #fff;
-}
-
-.rnw-doc-btn-open:hover {
-    background: #1e40af;
-}
-
-
-/* Decision section */
-
-.rnw-decision-section {
-    border-bottom: none !important;
-}
-
-.rnw-decision-hint {
-    font-size: 0.83rem;
-    color: #64748b;
-    margin: 0 0 14px;
-    line-height: 1.5;
-}
-
-.rnw-radio-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 14px;
-}
-
-.rnw-radio-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 2px solid #e2e8f0;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    position: relative;
-}
-
-.rnw-radio-card input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.rnw-radio-approve {
-    background: #f0fdf4;
-}
-
-.rnw-radio-approve:hover {
-    border-color: #86efac;
-}
-
-.rnw-active-approve {
-    border-color: #22c55e !important;
-    background: #f0fdf4 !important;
-}
-
-.rnw-radio-reject {
-    background: #fff7f7;
-}
-
-.rnw-radio-reject:hover {
-    border-color: #fca5a5;
-}
-
-.rnw-active-reject {
-    border-color: #ef4444 !important;
-    background: #fff1f1 !important;
-}
-
-.rnw-radio-icon {
-    font-size: 1.3rem;
-    flex-shrink: 0;
-}
-
-.rnw-icon-approve {
-    color: #22c55e;
-}
-
-.rnw-icon-reject {
-    color: #ef4444;
-}
-
-.rnw-radio-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.rnw-radio-label {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-.rnw-radio-desc {
-    font-size: 0.75rem;
-    color: #64748b;
-}
-
-
-/* Alerts */
-
-.rnw-alert {
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 0.83rem;
-    font-weight: 500;
-    margin-top: 8px;
-}
-
-.rnw-alert-success {
-    background: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
-}
-
-.rnw-alert-error {
-    background: #fef2f2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
-}
-
-
-/* Modal footer */
-
-.rnw-modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 14px 24px;
-    border-top: 1px solid #f1f5f9;
-    flex-shrink: 0;
-    background: #fff;
-}
-
-.rnw-footer-cancel {
-    padding: 9px 22px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 10px;
-    background: #fff;
-    color: #64748b;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-
-.rnw-footer-cancel:hover:not(:disabled) {
-    background: #f8fafc;
-}
-
-.rnw-footer-submit {
-    padding: 9px 22px;
-    border: none;
-    border-radius: 10px;
-    background: #1e3a8a;
-    color: #fff;
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.15s;
-}
-
-.rnw-footer-submit:hover:not(:disabled) {
-    background: #1e40af;
-}
-
-.rnw-footer-submit:disabled,
-.rnw-footer-cancel:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-
-/* Spinner */
-
-@keyframes rnw-spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.rnw-spin {
-    animation: rnw-spin 0.8s linear infinite;
-}
-
-
-/* Document preview overlay */
-
-.rnw-preview-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1100;
-    padding: 20px;
-}
-
-.rnw-preview-box {
-    background: #fff;
-    border-radius: 14px;
-    overflow: hidden;
-    width: 100%;
-    max-width: 800px;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.rnw-preview-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    border-bottom: 1px solid #f1f5f9;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #1e293b;
-}
-
-.rnw-preview-header button {
-    background: #f1f5f9;
-    border: none;
-    border-radius: 8px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #64748b;
-    font-size: 0.9rem;
-}
-
-.rnw-preview-header button:hover {
-    background: #e2e8f0;
-}
-
-.rnw-preview-img {
-    width: 100%;
-    max-height: calc(90vh - 60px);
-    object-fit: contain;
-    display: block;
-}
-
-.rnw-preview-iframe {
-    width: 100%;
-    height: calc(90vh - 60px);
-    border: none;
-}
-
-.rnw-preview-fallback {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 40px;
-    color: #64748b;
-}
-
-.rnw-preview-fallback a {
-    color: #1d4ed8;
-    font-size: 0.875rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-
-
-/* ═══════════════════════════════════════════════════════════
-   RENEWAL MODAL — append to src/css/Renewal.css
-   Same design as ScholarshipApplications modal
-═══════════════════════════════════════════════════════════ */
-
-
-/* ── Modal overlay ───────────────────────────────────────── */
 
 .rnw-overlay {
     position: fixed;
@@ -1161,7 +613,7 @@ body {
 }
 
 
-/* ── Section Header ──────────────────────────────────────── */
+/* ── Section ─────────────────────────────────────────────── */
 
 .rnw-modal-section {
     display: flex;
@@ -1189,7 +641,7 @@ body {
 }
 
 
-/* ── Info Grid 2col ──────────────────────────────────────── */
+/* ── Info Grid ───────────────────────────────────────────── */
 
 .rnw-info-grid-2col {
     display: grid;
@@ -1223,7 +675,7 @@ body {
 }
 
 
-/* ── Document Rows — Preview + Open ─────────────────────── */
+/* ── Document Rows ───────────────────────────────────────── */
 
 .rnw-docs-list {
     display: flex;
@@ -1286,34 +738,11 @@ body {
     border-radius: 999px;
 }
 
-
-/* Preview + Open button group */
-
 .rnw-doc-row-actions {
     display: flex;
     align-items: center;
     gap: 6px;
     flex-shrink: 0;
-}
-
-.rnw-doc-preview-btn {
-    height: 30px;
-    padding: 0 14px;
-    border-radius: 7px;
-    border: 1.5px solid #d1d5db;
-    background: #fff;
-    color: #374151;
-    font-size: 0.78rem;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background .15s, border-color .15s;
-    white-space: nowrap;
-}
-
-.rnw-doc-preview-btn:hover {
-    background: #f3f4f6;
-    border-color: #9ca3af;
 }
 
 .rnw-doc-open-btn {
@@ -1341,6 +770,208 @@ body {
     color: #94a3b8;
     text-align: center;
     padding: 16px;
+}
+
+
+/* ── Decision Section ────────────────────────────────────── */
+
+.rnw-decision-section {
+    background: #f8faff;
+    border: 1.5px solid #e0eaff;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.rnw-decision-hint {
+    font-size: 0.8rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.rnw-decision-hint strong {
+    color: #0f172a;
+}
+
+.rnw-radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.rnw-radio-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .18s, background .18s, box-shadow .18s;
+}
+
+.rnw-radio-card input[type="radio"] {
+    display: none;
+}
+
+.rnw-radio-approve:hover {
+    border-color: #22c55e;
+    background: #f0fdf4;
+}
+
+.rnw-radio-reject:hover {
+    border-color: #ef4444;
+    background: #fff5f5;
+}
+
+.rnw-active-approve {
+    border-color: #22c55e !important;
+    background: #f0fdf4 !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, .15);
+}
+
+.rnw-active-reject {
+    border-color: #ef4444 !important;
+    background: #fff5f5 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, .15);
+}
+
+.rnw-radio-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.rnw-icon-approve {
+    color: #22c55e;
+}
+
+.rnw-icon-reject {
+    color: #ef4444;
+}
+
+.rnw-radio-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.rnw-radio-label {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.rnw-radio-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+
+/* ── Alerts ──────────────────────────────────────────────── */
+
+.rnw-alert {
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.rnw-alert-success {
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    color: #166534;
+}
+
+.rnw-alert-error {
+    background: #fef2f2;
+    border: 1.5px solid #fecaca;
+    color: #991b1b;
+}
+
+
+/* ── Modal Footer ────────────────────────────────────────── */
+
+.rnw-modal-footer-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.rnw-footer-cancel {
+    height: 38px;
+    padding: 0 20px;
+    border-radius: 8px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s;
+}
+
+.rnw-footer-cancel:hover:not(:disabled) {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.rnw-footer-cancel:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.rnw-footer-submit {
+    height: 38px;
+    padding: 0 22px;
+    border-radius: 8px;
+    border: none;
+    background: #0f1f3d;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s, opacity .15s;
+}
+
+.rnw-footer-submit:hover:not(:disabled) {
+    background: #1e2d7d;
+}
+
+.rnw-footer-submit:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.rnw-footer-submit.danger {
+    background: #dc2626;
+}
+
+.rnw-footer-submit.danger:hover:not(:disabled) {
+    background: #b91c1c;
+}
+
+
+/* ── Spinner ─────────────────────────────────────────────── */
+
+.rnw-spin {
+    animation: rnw-spin-anim .8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes rnw-spin-anim {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -1457,244 +1088,9 @@ body {
 }
 
 
-/* ── Decision Section ────────────────────────────────────── */
-
-.rnw-decision-section {
-    background: #f8faff;
-    border: 1.5px solid #e0eaff;
-    border-radius: 12px;
-    padding: 16px;
-}
-
-.rnw-decision-hint {
-    font-size: 0.8rem;
-    color: #64748b;
-    line-height: 1.6;
-}
-
-.rnw-decision-hint strong {
-    color: #0f172a;
-}
-
-.rnw-radio-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.rnw-radio-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 10px;
-    border: 2px solid #e2e8f0;
-    background: #fff;
-    cursor: pointer;
-    transition: border-color .18s, background .18s, box-shadow .18s;
-}
-
-.rnw-radio-card input[type="radio"] {
-    display: none;
-}
-
-.rnw-radio-approve:hover {
-    border-color: #22c55e;
-    background: #f0fdf4;
-}
-
-.rnw-radio-reject:hover {
-    border-color: #ef4444;
-    background: #fff5f5;
-}
-
-.rnw-active-approve {
-    border-color: #22c55e !important;
-    background: #f0fdf4 !important;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, .15);
-}
-
-.rnw-active-reject {
-    border-color: #ef4444 !important;
-    background: #fff5f5 !important;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, .15);
-}
-
-.rnw-radio-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.rnw-icon-approve {
-    color: #22c55e;
-}
-
-.rnw-icon-reject {
-    color: #ef4444;
-}
-
-.rnw-radio-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.rnw-radio-label {
-    font-size: 0.875rem;
-    font-weight: 800;
-    color: #0f172a;
-}
-
-.rnw-radio-desc {
-    font-size: 0.75rem;
-    color: #64748b;
-}
-
-
-/* Alerts */
-
-.rnw-alert {
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    margin-top: 4px;
-}
-
-.rnw-alert-success {
-    background: #f0fdf4;
-    border: 1.5px solid #bbf7d0;
-    color: #166534;
-}
-
-.rnw-alert-error {
-    background: #fef2f2;
-    border: 1.5px solid #fecaca;
-    color: #991b1b;
-}
-
-
-/* ── Modal Footer ────────────────────────────────────────── */
-
-.rnw-modal-footer-bar {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    padding: 14px 22px;
-    border-top: 1px solid #f1f5f9;
-    background: #fff;
-    flex-shrink: 0;
-}
-
-.rnw-footer-cancel {
-    height: 38px;
-    padding: 0 20px;
-    border-radius: 8px;
-    border: 1.5px solid #e2e8f0;
-    background: #fff;
-    color: #64748b;
-    font-size: 0.82rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background .15s;
-}
-
-.rnw-footer-cancel:hover:not(:disabled) {
-    background: #f1f5f9;
-    color: #0f172a;
-}
-
-.rnw-footer-cancel:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-.rnw-footer-submit {
-    height: 38px;
-    padding: 0 22px;
-    border-radius: 8px;
-    border: none;
-    background: #0f1f3d;
-    color: #fff;
-    font-size: 0.82rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background .15s, opacity .15s;
-}
-
-.rnw-footer-submit:hover:not(:disabled) {
-    background: #1e2d7d;
-}
-
-.rnw-footer-submit:disabled {
-    opacity: .45;
-    cursor: not-allowed;
-}
-
-.rnw-footer-submit.danger {
-    background: #dc2626;
-}
-
-.rnw-footer-submit.danger:hover:not(:disabled) {
-    background: #b91c1c;
-}
-
-.rnw-spin {
-    animation: spin .7s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-
-/* ── Responsive ──────────────────────────────────────────── */
-
-@media (max-width: 1100px) {
-    .renewals-cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-     :root {
-        --sidebar-w: 0px;
-    }
-    .scholars-main_renewals {
-        margin-left: 0;
-        padding: 14px;
-    }
-    .renewals-cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .rnw-info-grid {
-        grid-template-columns: 1fr;
-    }
-    .rnw-radio-group {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .renewals-cards {
-        grid-template-columns: 1fr;
-    }
-}
-
-
 /* ══════════════════════════════════════════════════
-   RENEWAL TOGGLE — additions to Renewal.css
+   RENEWAL TOGGLE
 ══════════════════════════════════════════════════ */
-
-
-/* Title row with toggle button side by side */
 
 .renewals-title-row {
     display: flex;
@@ -1704,9 +1100,6 @@ body {
     flex-wrap: wrap;
     gap: 12px;
 }
-
-
-/* The toggle button */
 
 .rnw-toggle-btn {
     display: inline-flex;
@@ -1754,9 +1147,6 @@ body {
     background: #fecaca;
 }
 
-
-/* Status banner below title */
-
 .rnw-status-banner {
     padding: 12px 18px;
     border-radius: 10px;
@@ -1778,7 +1168,7 @@ body {
 }
 
 
-/* ── Toggle Confirm Modal ── */
+/* ── Toggle Confirm Modal ─────────────────────────────────── */
 
 .rnw-toggle-modal {
     background: #fff;
@@ -1792,7 +1182,7 @@ body {
     align-items: center;
     text-align: center;
     gap: 12px;
-    animation: prof-pop 0.2s ease;
+    animation: rnwSlideUp 0.2s ease;
 }
 
 .rnw-toggle-icon-wrap {
@@ -1839,26 +1229,35 @@ body {
 }
 
 
-/* danger variant for submit btn */
+/* ── Responsive ──────────────────────────────────────────── */
 
-.rnw-footer-submit.danger {
-    background: #dc2626;
-}
-
-.rnw-footer-submit.danger:hover:not(:disabled) {
-    background: #b91c1c;
-}
-
-.rnw-spin {
-    animation: spin 0.8s linear infinite;
-    display: inline-block;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
+@media (max-width: 1100px) {
+    .renewals-cards {
+        grid-template-columns: repeat(2, 1fr);
     }
-    to {
-        transform: rotate(360deg);
+}
+
+@media (max-width: 768px) {
+     :root {
+        --sidebar-w: 0px;
+    }
+    .scholars-main_renewals {
+        margin-left: 0;
+        padding: 14px;
+    }
+    .renewals-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .rnw-info-grid-2col {
+        grid-template-columns: 1fr;
+    }
+    .rnw-radio-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .renewals-cards {
+        grid-template-columns: 1fr;
     }
 }

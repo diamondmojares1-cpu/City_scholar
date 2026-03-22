@@ -11,7 +11,7 @@ import {
     doc,
     serverTimestamp,
 } from "firebase/firestore";
-import { parseMessage } from "./services/Messagehelpers.js";
+import { parseMessage } from "./messageHelpers.js";
 
 export function useMessages(selectedConv) {
     const [messages, setMessages] = useState([]);
@@ -25,7 +25,7 @@ export function useMessages(selectedConv) {
         }
         setMessages([]);
 
-        if (!selectedConv ? .id) return;
+        if (!selectedConv?.id) return;
 
         const msgRef = collection(db, "chats", selectedConv.id, "messages");
 
@@ -48,10 +48,10 @@ export function useMessages(selectedConv) {
                 unsubRef.current = null;
             }
         };
-    }, [selectedConv ? .id]);
+    }, [selectedConv?.id]);
 
     const sendMessage = async(text) => {
-        if (!text ? .trim() || !selectedConv ? .id || sending) return;
+        if (!text?.trim() || !selectedConv?.id || sending) return;
         setSending(true);
         const now = Date.now();
         try {

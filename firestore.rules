@@ -4,31 +4,79 @@ service cloud.firestore {
 
     // Helper function to check if the requester is an admin
     function isAdmin() {
-      return request.auth != null && 
+      return request.auth != null &&
              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // Superadmin helper (uses role field)
+    function isSuperAdmin() {
+      return request.auth != null &&
+             lower(get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role) == "superadmin";
+    }
+
+    function isAdminOrSuper() {
+      return isAdmin() || isSuperAdmin();
     }
 
     // Each user can access their own profile, OR an admin can access it
     match /users/{userId} {
-      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdminOrSuper());
     }
 
     // Scholarship Drafts
     match /scholarship_drafts/{userId} {
-      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdminOrSuper());
     }
 
     // Scholarship Applications
-    match /scholarship_applications/{userId} {
-      allow read, write: if request.auth != null && (request.auth.uid == userId || isAdmin());
+    match /scholarship_applications/{docId} {
+      // Read/update/delete if admin OR if this doc belongs to the signed-in user
+      allow read, update, delete: if request.auth != null &&
+        (isAdminOrSuper() || resource.data.userId == request.auth.uid || docId == request.auth.uid);
+      // Create if the payload belongs to the signed-in user
+      allow create: if request.auth != null &&
+        (isAdminOrSuper() || request.resource.data.userId == request.auth.uid || docId == request.auth.uid);
+    }
+
+    // Announcements and calendar notes (events)
+    match /announcements/{docId} {
+      allow read, list: if request.auth != null && isAdminOrSuper();
+      allow create, update, delete: if request.auth != null && isAdminOrSuper();
+      match /attendance_proofs/{proofId} {
+        allow read, list: if request.auth != null && isAdminOrSuper();
+        allow create: if request.auth != null;
+      }
+    }
+
+    match /calendar_notes/{docId} {
+      allow read, list: if request.auth != null && isAdminOrSuper();
+      allow create, update, delete: if request.auth != null && isAdminOrSuper();
+      match /attendance_proofs/{proofId} {
+        allow read, list: if request.auth != null && isAdminOrSuper();
+        allow create: if request.auth != null;
+      }
+    }
+
+    // User uploads of attendance proofs stored at root
+    match /user_announcements_upload/{docId} {
+      allow read, list: if request.auth != null && isAdminOrSuper();
+      allow create: if request.auth != null;
+    }
+
+    // Scholar Renewals
+    match /scholar_renewals/{docId} {
+      allow read, update, delete: if request.auth != null &&
+        (isAdminOrSuper() || resource.data.userId == request.auth.uid);
+      allow create: if request.auth != null &&
+        (isAdminOrSuper() || request.resource.data.userId == request.auth.uid);
     }
 
     // Chat
     match /chats/{chatId} {
       // Admins can read all chats; users only their own
-      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdminOrSuper());
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow update: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if request.auth != null && (resource.data.userId == request.auth.uid || isAdminOrSuper());
 
       match /messages/{messageId} {
         // Inherits access logic or add specific admin override here

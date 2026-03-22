@@ -90,7 +90,7 @@ function EventModal({ events, onClose }) {
 }
 
 // ── Main Page ──────────────────────────────────────────────
-function CalendarPage() {
+function CalendarPage({ SidebarComponent = Sidebar, activePage = "calendar" }) {
   const today = new Date();
 
   const [view, setView]         = useState({ year: today.getFullYear(), month: today.getMonth() });
@@ -124,7 +124,7 @@ function CalendarPage() {
 
   return (
     <div className="cal-container">
-      <Sidebar activePage="calendar" />
+      <SidebarComponent activePage={activePage} />
 
       <main className="cal-main">
 

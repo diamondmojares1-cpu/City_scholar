@@ -45,9 +45,9 @@ function Login() {
 
       const { role } = snap.data();
 
-      // 4. Email verification check — SKIP for admin and superadmin accounts
-      //    These accounts are created manually and don't need email verification
-      if (role !== "admin" && role !== "superadmin" && !freshUser.emailVerified) {
+      // 4. Email verification check — SKIP for admin, superadmin, and staff accounts
+      //    These accounts are created manually by admin and don't need email verification
+      if (role !== "admin" && role !== "superadmin" && role !== "staff" && !freshUser.emailVerified) {
         await signOut(auth);
         return setError(
           "Your email is not verified yet. Please check your Gmail and click the verification link."
@@ -57,8 +57,10 @@ function Login() {
       // 5. Redirect based on role
       if (role === "superadmin") {
         navigate("/superadmin-dashboard");
-      } else if (role === "admin" || role === "staff") {
+      } else if (role === "admin") {
         navigate("/admin-dashboard");
+      } else if (role === "staff") {
+        navigate("/staff-dashboard");
       } else {
         navigate("/student-dashboard");
       }

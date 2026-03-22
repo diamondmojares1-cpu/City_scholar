@@ -48,6 +48,7 @@ body {
 
 .cal-main {
     flex: 1;
+    width: 1200px;
     margin-left: var(--sidebar-w);
     padding: 28px 30px 36px;
     display: flex;

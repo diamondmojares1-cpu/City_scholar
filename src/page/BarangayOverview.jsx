@@ -1,6 +1,6 @@
 // BarangayOverview.jsx
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { FaSearch, FaBell, FaUserCircle, FaTimes, FaUsers } from "react-icons/fa";
+import { FaSearch, FaTimes, FaUsers } from "react-icons/fa";
 import Sidebar from "../components/Sidebar.jsx";
 import { fetchStudentRecords, groupStudentsByBarangay } from "../utils/scholarDataFetch.js";
 import "../css/BarangayOverview.css";
@@ -49,24 +49,80 @@ const BARANGAY_COORDS = {
   "Gueset":            [16.0561, 120.3371],
 };
 
+const BARANGAY_ALIAS_MAP = {
+  perez: "Herrero-Perez",
+  boquig: "Bonuan Boquig",
+  binloc: "Bonuan Binloc",
+  gueset: "Bonuan Gueset",
+};
+
+const HIDDEN_BARANGAY_ALIASES = new Set(["Perez", "Boquig", "Binloc", "Gueset"]);
+const DISPLAY_BARANGAYS = Object.keys(BARANGAY_COORDS).filter(function(name) {
+  return !HIDDEN_BARANGAY_ALIASES.has(name);
+});
+
+function createBarangayEntry(name) {
+  return {
+    name: name,
+    totalScholars: 0,
+    students: [],
+  };
+}
+
+function normalizeBarangayName(name) {
+  var trimmed = (name || "").trim();
+  if (!trimmed) return "Unknown";
+
+  var lower = trimmed.toLowerCase();
+  if (BARANGAY_ALIAS_MAP[lower]) return BARANGAY_ALIAS_MAP[lower];
+
+  var exactMatch = DISPLAY_BARANGAYS.find(function(item) {
+    return item.toLowerCase() === lower;
+  });
+  if (exactMatch) return exactMatch;
+
+  return trimmed;
+}
+
+function buildBarangayOverviewData(groupedData) {
+  var mergedMap = {};
+
+  groupedData.forEach(function(item) {
+    var normalizedName = normalizeBarangayName(item.name);
+
+    if (!mergedMap[normalizedName]) {
+      mergedMap[normalizedName] = createBarangayEntry(normalizedName);
+    }
+
+    mergedMap[normalizedName].totalScholars += item.totalScholars || 0;
+    mergedMap[normalizedName].students = mergedMap[normalizedName].students.concat(item.students || []);
+  });
+
+  var knownBarangays = DISPLAY_BARANGAYS.map(function(name) {
+    return mergedMap[name] || createBarangayEntry(name);
+  });
+
+  var extraBarangays = Object.values(mergedMap)
+    .filter(function(item) { return !DISPLAY_BARANGAYS.includes(item.name); })
+    .sort(function(a, b) { return a.name.localeCompare(b.name); });
+
+  return knownBarangays.concat(extraBarangays);
+}
+
 // ─────────────────────────────────────────────────────────────
 // Fuzzy barangay name matcher
-// Tries exact → lowercase → partial word match
 // ─────────────────────────────────────────────────────────────
 function findCoords(brgyName) {
   if (!brgyName) return null;
 
-  // 1. Exact match
   if (BARANGAY_COORDS[brgyName]) return BARANGAY_COORDS[brgyName];
 
   const lower = brgyName.toLowerCase().trim();
 
-  // 2. Case-insensitive match
   for (var key in BARANGAY_COORDS) {
     if (key.toLowerCase() === lower) return BARANGAY_COORDS[key];
   }
 
-  // 3. Partial match — Firebase name contains the coord key or vice versa
   for (var key2 in BARANGAY_COORDS) {
     var keyLower = key2.toLowerCase();
     if (lower.includes(keyLower) || keyLower.includes(lower)) {
@@ -74,7 +130,6 @@ function findCoords(brgyName) {
     }
   }
 
-  // 4. Word-level match — any word in common
   var words = lower.split(/[\s\-]+/);
   for (var key3 in BARANGAY_COORDS) {
     var keyWords = key3.toLowerCase().split(/[\s\-]+/);
@@ -160,29 +215,20 @@ function LeafletMap({ barangayData, onMarkerClick }) {
     var map = mapObjRef.current;
     if (!L || !map) return;
 
-    // Remove old markers
     map.eachLayer(function(layer) {
       if (layer instanceof L.Marker || layer instanceof L.CircleMarker) {
         map.removeLayer(layer);
       }
     });
 
-    // Build lookup from barangayData (from Firebase)
-    var countMap = {};
-    barangayData.forEach(function(b) { countMap[b.name] = b; });
-
-    // Step 1: Show all KNOWN barangay coords with 0 by default
     var rendered = {};
 
-    // Step 2: Plot Firebase barangays using fuzzy match
     barangayData.forEach(function(brgyData) {
       var coords = findCoords(brgyData.name);
-      if (!coords) return; // skip if no coords found
+      if (!coords) return;
 
-      // Use the coord key as dedup key to avoid double markers
       var coordKey = coords[0] + "," + coords[1];
       if (rendered[coordKey]) {
-        // Already rendered — add count to existing
         rendered[coordKey].count += brgyData.totalScholars;
         rendered[coordKey].names.push(brgyData.name);
         rendered[coordKey].brgyData = brgyData;
@@ -196,7 +242,6 @@ function LeafletMap({ barangayData, onMarkerClick }) {
       }
     });
 
-    // Step 3: Also show known barangay coords that have no Firebase data (count = 0)
     Object.keys(BARANGAY_COORDS).forEach(function(brgyName) {
       var coords = BARANGAY_COORDS[brgyName];
       var coordKey = coords[0] + "," + coords[1];
@@ -210,7 +255,6 @@ function LeafletMap({ barangayData, onMarkerClick }) {
       }
     });
 
-    // Step 4: Draw markers
     Object.keys(rendered).forEach(function(coordKey) {
       var item   = rendered[coordKey];
       var count  = item.count;
@@ -253,7 +297,7 @@ function LeafletMap({ barangayData, onMarkerClick }) {
 // ─────────────────────────────────────────────────────────────
 // Main Component
 // ─────────────────────────────────────────────────────────────
-function BarangayOverview() {
+function BarangayOverview({ SidebarComponent = Sidebar, activePage = "barangay" }) {
   const [barangayData, setBarangayData] = useState([]);
   const [loading, setLoading]           = useState(true);
   const [searchQuery, setSearchQuery]   = useState("");
@@ -265,7 +309,7 @@ function BarangayOverview() {
       try {
         var students = await fetchStudentRecords();
         var grouped  = groupStudentsByBarangay(students);
-        setBarangayData(grouped);
+        setBarangayData(buildBarangayOverviewData(grouped));
       } catch (error) {
         console.error("Error fetching barangay data:", error);
       } finally {
@@ -276,7 +320,7 @@ function BarangayOverview() {
   }, []);
 
   const maxCount = useMemo(function() {
-    return barangayData.length ? Math.max.apply(null, barangayData.map(function(b) { return b.totalScholars; })) : 1;
+    return Math.max(1, ...barangayData.map(function(b) { return b.totalScholars; }));
   }, [barangayData]);
 
   const filtered = useMemo(function() {
@@ -297,7 +341,7 @@ function BarangayOverview() {
 
   return (
     <div className="barangay-container">
-      <Sidebar activePage="barangay" />
+      <SidebarComponent activePage={activePage} />
       <main className="barangay-main">
 
         <div className="overview-container">
@@ -306,7 +350,7 @@ function BarangayOverview() {
 
           <div className="content-wrapper">
 
-            {/* Leaflet Map */}
+            {/* Leaflet Map — sticky left column */}
             <div className="map-card">
               <h3>Map — Scholar Count per Barangay</h3>
               <div className="map-wrapper">
@@ -334,31 +378,37 @@ function BarangayOverview() {
               </div>
             </div>
 
-            {/* Right panel */}
+            {/* Right panel — scrollable column */}
             <div className="right-panel">
 
               {/* Bar Chart */}
               <div className="chart-card">
                 <h3>Scholars by Barangay</h3>
-                {loading || !barangayData.length ? (
-                  <p style={{ textAlign:"center", padding:"20px", color:"#777" }}>
-                    {loading ? "Loading…" : "No barangay data available"}
-                  </p>
+                {loading ? (
+                  <p style={{ textAlign:"center", padding:"20px", color:"#777" }}>Loading…</p>
                 ) : (
                   <div className="barangay-bar-chart">
-                    {barangayData.map(function(b) {
-                      return (
-                        <div key={b.name} className="barangay-bar-column">
-                          <span className="barangay-bar-count">{b.totalScholars}</span>
-                          <div
-                            className="barangay-bar"
-                            style={{ height: ((b.totalScholars / maxCount) * 100 || 0) + "%" }}
-                            title={b.name + ": " + b.totalScholars}
-                          />
-                          <span className="barangay-bar-label">{b.name}</span>
-                        </div>
-                      );
-                    })}
+                    {barangayData.filter(function(b) { return b.totalScholars > 0; }).length === 0 ? (
+                      <p style={{ color: "#9ca3af", fontSize: "13px", padding: "20px 0" }}>No scholar data yet.</p>
+                    ) : (
+                      barangayData
+                        .filter(function(b) { return b.totalScholars > 0; })
+                        .sort(function(a, b) { return b.totalScholars - a.totalScholars; })
+                        .map(function(b) {
+                          var barHeight = ((b.totalScholars / maxCount) * 160) + "px";
+                          return (
+                            <div key={b.name} className="barangay-bar-column">
+                              <span className="barangay-bar-count">{b.totalScholars}</span>
+                              <div
+                                className="barangay-bar"
+                                style={{ height: barHeight }}
+                                title={b.name + ": " + b.totalScholars}
+                              />
+                              <span className="barangay-bar-label" title={b.name}>{b.name}</span>
+                            </div>
+                          );
+                        })
+                    )}
                   </div>
                 )}
               </div>
@@ -374,35 +424,53 @@ function BarangayOverview() {
                   )}
                 </div>
 
+                <div className="brgy-list-search">
+                  <div className="brgy-search-box">
+                    <FaSearch />
+                    <input
+                      type="text"
+                      placeholder="Search barangay..."
+                      value={searchQuery}
+                      onChange={function(e) { setSearchQuery(e.target.value); }}
+                    />
+                  </div>
+                </div>
+
                 {loading ? (
                   <p style={{ textAlign:"center", padding:"20px" }}>Loading…</p>
                 ) : filtered.length === 0 ? (
-                  <p style={{ textAlign:"center", padding:"20px", color:"#777" }}>No data available</p>
+                  <p style={{ textAlign:"center", padding:"20px", color:"#777" }}>
+                    {searchQuery ? "No barangay matched your search." : "No data available"}
+                  </p>
                 ) : (
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Barangay</th>
-                        <th>Total Scholars</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filtered.map(function(b) {
-                        return (
-                          <tr key={b.name}>
-                            <td>{b.name}</td>
-                            <td><span className="brgy-count-pill">{b.totalScholars}</span></td>
-                            <td>
-                              <button className="view-btn" onClick={() => openModal(b)}>View</button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                  // ↓ Scroll wrapper — THIS is the key fix
+                  <div className="table-scroll-wrapper">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Barangay</th>
+                          <th>Total Scholars</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filtered.map(function(b) {
+                          return (
+                            <tr key={b.name}>
+                              <td>{b.name}</td>
+                              <td><span className="brgy-count-pill">{b.totalScholars}</span></td>
+                              <td>
+                                <button className="view-btn" onClick={() => openModal(b)}>View</button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
+
             </div>
           </div>
         </div>

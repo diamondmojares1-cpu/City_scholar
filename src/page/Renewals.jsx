@@ -186,6 +186,7 @@ function ViewDocumentsModal({ scholar, onClose, onApprove, onReject }) {
             <SectionHeader icon={FaGraduationCap} title="Education Information" />
             <div className="rnw-info-grid-2col">
               <InfoField label="School"     value={scholar.school} />
+              <InfoField label="Semester"   value={scholar.semester || "—"} />
               <InfoField label="Course"     value={scholar.course} />
               <InfoField label="Year Level" value={scholar.yearLevel} />
               <InfoField label="GPA / GWA"  value={scholar.gpa} />
@@ -263,7 +264,7 @@ function ViewDocumentsModal({ scholar, onClose, onApprove, onReject }) {
 }
 
 // ── Main Component ────────────────────────────────────────────
-function Renewals() {
+function Renewals({ SidebarComponent = Sidebar, activePage = "renewals" }) {
   const [loading,         setLoading]         = useState(true);
   const [rows,            setRows]            = useState([]);
   const [searchQuery,     setSearchQuery]     = useState("");
@@ -274,6 +275,7 @@ function Renewals() {
   const [renewalOpen,     setRenewalOpen]     = useState(false);
   const [toggleLoading,   setToggleLoading]   = useState(true);
   const [showConfirm,     setShowConfirm]     = useState(false);
+  const [activeTab,       setActiveTab]       = useState("new"); // new=pending/reviewing/missing, old=approved
 
   useEffect(() => {
     async function loadToggle() {
@@ -328,17 +330,25 @@ function Renewals() {
   }, []);
 
   useEffect(() => { setCurrentPage(1); }, [searchQuery]);
+  useEffect(() => { setCurrentPage(1); }, [activeTab]);
 
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return rows;
-    return rows.filter(r =>
+    const base = rows.filter(r => {
+      const s = (r.status || "").toLowerCase();
+      return activeTab === "new"
+        ? !(s === "approved")
+        : s === "approved";
+    });
+    if (!q) return base;
+    return base.filter(r =>
       (r.name   || "").toLowerCase().includes(q) ||
       (r.school || "").toLowerCase().includes(q) ||
+      (r.semester || "").toLowerCase().includes(q) ||
       (r.course || "").toLowerCase().includes(q) ||
       (r.status || "").toLowerCase().includes(q)
     );
-  }, [rows, searchQuery]);
+  }, [rows, searchQuery, activeTab]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated  = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -370,7 +380,7 @@ function Renewals() {
 
   return (
     <div className="scholars-container_renewals">
-      <Sidebar activePage="renewals" />
+      <SidebarComponent activePage={activePage} />
       <main className="scholars-main_renewals">
         <div className="renewals-content-wrap">
 
@@ -402,20 +412,31 @@ function Renewals() {
               <span className="renewals-card-label">Total Renewal Form</span>
             </div>
             <div className="renewals-card">
+              <span className="renewals-card-number">{loading ? "—" : formatCount(counts.total - counts.approved)}</span>
+              <span className="renewals-card-label">Pending</span>
+            </div>
+            <div className="renewals-card">
               <span className="renewals-card-number">{loading ? "—" : formatCount(counts.approved)}</span>
               <span className="renewals-card-label">Approved</span>
-            </div>
-            <div className="renewals-card">
-              <span className="renewals-card-number">{loading ? "—" : formatCount(counts.rejected)}</span>
-              <span className="renewals-card-label">Rejected</span>
-            </div>
-            <div className="renewals-card">
-              <span className="renewals-card-number">{loading ? "—" : formatCount(counts.missing)}</span>
-              <span className="renewals-card-label">Missing Requirements</span>
             </div>
           </div>
 
           {error && <div className="renewals-error-banner">{error}</div>}
+
+          <div className="renewals-tabs">
+            <button
+              className={`renewals-tab ${activeTab === "new" ? "active" : ""}`}
+              onClick={() => setActiveTab("new")}
+            >
+              New (Pending) – {filtered.length}
+            </button>
+            <button
+              className={`renewals-tab ${activeTab === "old" ? "active" : ""}`}
+              onClick={() => setActiveTab("old")}
+            >
+              Old (Approved) – {activeTab === "old" ? filtered.length : counts.approved}
+            </button>
+          </div>
 
           {/* Table */}
           <div className="renewals-table-card">
@@ -437,19 +458,20 @@ function Renewals() {
                 <thead>
                   <tr>
                     <th>Scholar Name</th>
-                    <th>School</th>
-                    <th>GPA</th>
-                    <th>Date Submitted</th>
-                    <th>Scholarship Status</th>
-                    <th>Action</th>
+                  <th>School</th>
+                  <th>Semester</th>
+                  <th>GPA</th>
+                  <th>Date Submitted</th>
+                  <th>Scholarship Status</th>
+                  <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {loading ? (
-                    <tr><td colSpan={6} className="renewals-empty">Loading…</td></tr>
+                    <tr><td colSpan={7} className="renewals-empty">Loading…</td></tr>
                   ) : paginated.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="renewals-empty">
+                      <td colSpan={7} className="renewals-empty">
                         {searchQuery ? "No results found." : "No renewal applicants yet."}
                       </td>
                     </tr>
@@ -458,6 +480,7 @@ function Renewals() {
                       <tr key={r.id}>
                         <td>{r.name}</td>
                         <td>{r.school}</td>
+                        <td>{r.semester || "—"}</td>
                         <td>{r.gpa}</td>
                         <td>{r.dateSubmitted}</td>
                         <td>

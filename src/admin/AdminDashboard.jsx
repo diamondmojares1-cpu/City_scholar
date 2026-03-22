@@ -370,7 +370,7 @@ function AnnouncementModal({ onClose, onPost }) {
 // ─────────────────────────────────────────────────────────────
 // Main component
 // ─────────────────────────────────────────────────────────────
-export default function AdminDashboard() {
+export default function AdminDashboard({ SidebarComponent = Sidebar, activePage = "dashboard" }) {
   const today = new Date();
 
   const [loading,       setLoading]       = useState(true);
@@ -488,7 +488,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-container">
-      <Sidebar activePage="dashboard" />
+      <SidebarComponent activePage={activePage} />
 
       <main className="main">
 

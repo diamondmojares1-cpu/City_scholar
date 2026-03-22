@@ -1,13 +1,15 @@
+// src/components/Sidebar.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaThLarge, FaUserGraduate, FaMapMarkerAlt, FaCalendarAlt,
   FaBullhorn, FaCommentDots, FaArchive, FaSignOutAlt,
-  FaUserShield, FaUserPlus, FaRedo,
+  FaUserShield, FaUserPlus, FaRedo, FaUsers, FaUniversity,
 } from "react-icons/fa";
 import cityScholarLogo from "../assets/cityscholar.png";
 import "../css/Sidebar.css";
 
+// ── Logout Modal ──────────────────────────────────────────────
 function LogoutModal({ onConfirm, onCancel }) {
   return (
     <div className="sb-overlay" onClick={onCancel}>
@@ -26,44 +28,55 @@ function LogoutModal({ onConfirm, onCancel }) {
   );
 }
 
+// ── Menu definitions ──────────────────────────────────────────
+const ADMIN_MENU = [
+  { key: "dashboard",          label: "Dashboard",           icon: FaThLarge,      to: "/admin-dashboard"          },
+  { key: "applications",       label: "Applicants",          icon: FaUserGraduate, to: "/scholarship-applications" },
+  { key: "scholars",           label: "Scholars",            icon: FaUserGraduate, to: "/scholars"                 },
+  { key: "renewals",           label: "Renewals",            icon: FaRedo,         to: "/renewals"                 },
+  { key: "attendance",         label: "Attendance",          icon: FaUsers,        to: "/attendance-admin"         },
+  { key: "barangay",           label: "Barangay Overview",   icon: FaMapMarkerAlt, to: "/barangay-overview"        },
+  { key: "university",         label: "University Overview", icon: FaUniversity,   to: "/universityoverview"       },
+  { key: "calendar",           label: "Calendar",            icon: FaCalendarAlt,  to: "/calendar"                 },
+  { key: "announcements",      label: "Announcements",       icon: FaBullhorn,     to: "/Announcements"            },
+  { key: "messages-inquiries", label: "Messages",            icon: FaCommentDots,  to: "/messages-inquiries"       },
+  { key: "archives",           label: "Archives",            icon: FaArchive,      to: "/archives"                 },
+  { key: "manage-staff",       label: "Manage Staff",        icon: FaUserShield,   to: "/manage-staff"             },
+];
+
+const SUPERADMIN_MENU = [
+  { key: "dashboard",          label: "Dashboard",           icon: FaThLarge,      to: "/superadmin-dashboard"     },
+  { key: "scholars",           label: "Scholars",            icon: FaUserGraduate, to: "/scholars-super"           },
+  { key: "barangay",           label: "Barangay Overview",   icon: FaMapMarkerAlt, to: "/barangay-overview-super"  },
+  { key: "university",         label: "University Overview", icon: FaUniversity,   to: "/universityoverview-super" },
+  { key: "calendar",           label: "Calendar",            icon: FaCalendarAlt,  to: "/calendar-super"           },
+  { key: "attendance",         label: "Attendance",          icon: FaUsers,        to: "/attendance-super"         },
+  { key: "announcements",      label: "Announcements",       icon: FaBullhorn,     to: "/announcements-super"      },
+  { key: "messages-inquiries", label: "Messages",            icon: FaCommentDots,  to: "/messages-inquiries-super" },
+  { key: "archives",           label: "Archives",            icon: FaArchive,      to: "/archives-super"           },
+];
+
+// ── Main Sidebar Component ────────────────────────────────────
 function Sidebar({ activePage, role }) {
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
 
+  // ✅ Explicit role check — "superadmin" shows superadmin menu,
+  //    everything else (including "admin") shows admin menu
   const isSuperAdmin = role === "superadmin";
-
-  const menuItems = isSuperAdmin
-    ? [
-        { key: "dashboard",          label: "Dashboard",         icon: FaThLarge,      to: "/superadmin-dashboard"     },
-        { key: "scholars",           label: "Scholars",          icon: FaUserGraduate, to: "/scholars-super"           },
-        { key: "barangay",           label: "Barangay Overview", icon: FaMapMarkerAlt, to: "/barangay-overview-super"  },
-        { key: "calendar",           label: "Calendar",          icon: FaCalendarAlt,  to: "/calendar-super"           },
-        { key: "announcements",      label: "Announcements",     icon: FaBullhorn,     to: "/announcements-super"      },
-        { key: "messages-inquiries", label: "Messages",          icon: FaCommentDots,  to: "/messages-inquiries-super" },
-        { key: "archives",           label: "Archives",          icon: FaArchive,      to: "/archives"                 },
-      ]
-    : [
-        { key: "dashboard",          label: "Dashboard",         icon: FaThLarge,      to: "/admin-dashboard"          },
-        { key: "applications",       label: "Applicants",        icon: FaUserGraduate, to: "/scholarship-applications" },
-        { key: "scholars",           label: "Scholars",          icon: FaUserGraduate, to: "/scholars"                 },
-        { key: "renewals",           label: "Renewals",          icon: FaRedo,         to: "/renewals"                 },
-        { key: "barangay",           label: "Barangay Overview", icon: FaMapMarkerAlt, to: "/barangay-overview"        },
-        { key: "calendar",           label: "Calendar",          icon: FaCalendarAlt,  to: "/calendar"                 },
-        { key: "announcements",      label: "Announcements",     icon: FaBullhorn,     to: "/Announcements"            },
-        { key: "messages-inquiries", label: "Messages",          icon: FaCommentDots,  to: "/messages-inquiries"       },
-        { key: "archives",           label: "Archives",          icon: FaArchive,      to: "/archives"                 },
-      ];
+  const menuItems    = isSuperAdmin ? SUPERADMIN_MENU : ADMIN_MENU;
 
   return (
     <>
       <aside className="sb-sidebar">
 
-        {/* ── Logo ── */}
+        {/* Logo */}
         <div className="sb-logo">
           <img src={cityScholarLogo} alt="City Scholar" className="sb-logo-icon-img" />
           <span className="sb-logo-text">CITY SCHOLAR</span>
         </div>
 
+        {/* Nav links */}
         <nav className="sb-nav">
           {menuItems.map(({ key, label, icon: Icon, to }) => (
             <Link
@@ -76,6 +89,7 @@ function Sidebar({ activePage, role }) {
             </Link>
           ))}
 
+          {/* Superadmin-only: Add Admin / Staff button */}
           {isSuperAdmin && (
             <Link
               to="/manage-admins"
@@ -87,12 +101,17 @@ function Sidebar({ activePage, role }) {
           )}
         </nav>
 
+        {/* Bottom: user info + logout */}
         <div className="sb-bottom">
           <div className="sb-admin">
             <div className="sb-admin-avatar">{isSuperAdmin ? "🛡️" : "⭐"}</div>
             <span className="sb-admin-label">{isSuperAdmin ? "Super Admin" : "Admin"}</span>
           </div>
-          <button className="sb-logout-btn" onClick={() => setShowLogout(true)} title="Log out">
+          <button
+            className="sb-logout-btn"
+            onClick={() => setShowLogout(true)}
+            title="Log out"
+          >
             <FaSignOutAlt />
           </button>
         </div>

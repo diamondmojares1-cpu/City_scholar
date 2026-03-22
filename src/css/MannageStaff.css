@@ -1,0 +1,813 @@
+/* ══════════════════════════════════════════════════════════════
+   Manageadmins.css — City Scholar  ·  Manage Staff
+   ══════════════════════════════════════════════════════════════ */
+
+
+/* ── Root / Layout ───────────────────────────────────────────── */
+
+.ma-root {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #f1f5f9;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.ma-main {
+    flex: 1;
+    width: 1400px;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 0;
+    padding-bottom: 60px;
+}
+
+
+/* ── Header ──────────────────────────────────────────────────── */
+
+.ma-page-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.ma-page-copy {
+    min-width: 0;
+}
+
+.ma-title {
+    color: #1a2472;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.ma-subtitle {
+    color: #1a2472;
+    font-size: 13px;
+    margin: 4px 0 0;
+    font-weight: 500;
+}
+
+
+/* ── Body content ────────────────────────────────────────────── */
+
+.ma-body {
+    padding: 28px 36px;
+}
+
+
+/* ── Stat cards ──────────────────────────────────────────────── */
+
+.ma-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.ma-stat {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 150px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.ma-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.ma-stat-icon.blue {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.ma-stat-icon.teal {
+    background: #f0fdfa;
+    color: #0d9488;
+}
+
+.ma-stat-icon.amber {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.ma-stat-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.ma-stat-lbl {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 3px;
+}
+
+
+/* ── Toolbar ─────────────────────────────────────────────────── */
+
+.ma-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.ma-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 9px 14px;
+    flex: 1;
+    min-width: 200px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.ma-search:focus-within {
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.07);
+}
+
+.ma-search-ico {
+    color: #94a3b8;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.ma-search input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #0f172a;
+    background: transparent;
+    width: 100%;
+}
+
+.ma-search input::placeholder {
+    color: #94a3b8;
+}
+
+.ma-count {
+    font-size: 13px;
+    color: #64748b;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 14px;
+    white-space: nowrap;
+}
+
+
+/* ── Table ───────────────────────────────────────────────────── */
+
+.ma-table-wrap {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+}
+
+.ma-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.ma-table thead tr {
+    background: #0f172a;
+}
+
+.ma-table thead th {
+    padding: 13px 16px;
+    text-align: left;
+    color: #93c5fd;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+.ma-tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.1s;
+}
+
+.ma-tr:last-child {
+    border-bottom: none;
+}
+
+.ma-tr:hover {
+    background: #f8fafc;
+}
+
+.ma-table tbody td {
+    padding: 14px 16px;
+    color: #334155;
+    vertical-align: middle;
+}
+
+.ma-td-n {
+    color: #94a3b8 !important;
+    width: 48px;
+    font-weight: 500;
+}
+
+.ma-td-email {
+    color: #475569 !important;
+    font-size: 13px;
+}
+
+.ma-td-date {
+    color: #64748b !important;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.ma-td-center {
+    padding: 48px 16px !important;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+
+/* ── Avatar ──────────────────────────────────────────────────── */
+
+.ma-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.ma-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ma-name {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+
+/* ── Role badges ─────────────────────────────────────────────── */
+
+.ma-badge {
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+.badge-staff {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.badge-admin {
+    background: #faf5ff;
+    color: #7c3aed;
+}
+
+
+/* ── Remove button ───────────────────────────────────────────── */
+
+.ma-btn-remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.ma-btn-remove:hover {
+    background: #ffe4e6;
+    border-color: #fda4af;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED BUTTONS
+   ══════════════════════════════════════════════════════════════ */
+
+.ma-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1e3a8a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+    white-space: nowrap;
+}
+
+.ma-btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+}
+
+.ma-btn-primary:active {
+    transform: translateY(0);
+}
+
+.ma-btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.ma-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: #64748b;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.ma-btn-ghost:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.ma-btn-ghost:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ma-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+}
+
+.ma-btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+.ma-btn-danger:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* ── Loading spinner ─────────────────────────────────────────── */
+
+.ma-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: ma-spin 0.6s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes ma-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL
+   ══════════════════════════════════════════════════════════════ */
+
+.ma-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 20px;
+}
+
+.ma-modal {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 28px 72px rgba(0, 0, 0, 0.22);
+    animation: ma-in 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+}
+
+@keyframes ma-in {
+    from {
+        opacity: 0;
+        transform: scale(0.94) translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+/* ── Modal head ──────────────────────────────────────────────── */
+
+.ma-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 24px 0;
+}
+
+.ma-modal-head-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.3);
+}
+
+.ma-modal-head-text {
+    flex: 1;
+}
+
+.ma-modal-head-text h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+}
+
+.ma-modal-head-text p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 2px 0 0;
+}
+
+.ma-modal-x {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1.5px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+}
+
+.ma-modal-x:hover {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
+.ma-modal-x:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ma-modal-divider {
+    height: 1px;
+    background: #f1f5f9;
+    margin: 18px 0 0;
+}
+
+
+/* ── Form ────────────────────────────────────────────────────── */
+
+.ma-form {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.ma-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.ma-lbl {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ma-req {
+    color: #ef4444;
+}
+
+.ma-lbl-icon {
+    color: #6366f1;
+    font-size: 11px;
+}
+
+.ma-inp {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #0f172a;
+    background: #f8fafc;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.ma-inp:focus {
+    border-color: #1d4ed8;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.08);
+}
+
+.ma-inp::placeholder {
+    color: #94a3b8;
+}
+
+.ma-inp:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f1f5f9;
+}
+
+.ma-inp-wrap {
+    position: relative;
+}
+
+.ma-inp-pw {
+    padding-right: 44px;
+}
+
+.ma-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px;
+    transition: color 0.15s;
+}
+
+.ma-eye:hover {
+    color: #1d4ed8;
+}
+
+
+/* ── Select input ────────────────────────────────────────────── */
+
+.ma-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: not-allowed;
+}
+
+.ma-role-hint {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+
+/* ── Strength bar ────────────────────────────────────────────── */
+
+.ma-strength-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.ma-strength-track {
+    flex: 1;
+    height: 5px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.ma-strength-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.35s ease;
+}
+
+.ma-strength-fill.weak {
+    background: #ef4444;
+}
+
+.ma-strength-fill.fair {
+    background: #f59e0b;
+}
+
+.ma-strength-fill.good {
+    background: #3b82f6;
+}
+
+.ma-strength-fill.strong {
+    background: #22c55e;
+}
+
+.ma-strength-txt {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ma-strength-txt.weak {
+    color: #ef4444;
+}
+
+.ma-strength-txt.fair {
+    color: #f59e0b;
+}
+
+.ma-strength-txt.good {
+    color: #3b82f6;
+}
+
+.ma-strength-txt.strong {
+    color: #22c55e;
+}
+
+
+/* ── Alerts ──────────────────────────────────────────────────── */
+
+.ma-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    animation: ma-in 0.2s ease;
+}
+
+.ma-alert.err {
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+}
+
+.ma-alert.ok {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+
+/* ── Form buttons ────────────────────────────────────────────── */
+
+.ma-form-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+
+/* ── Delete modal ────────────────────────────────────────────── */
+
+.ma-del-modal {
+    max-width: 400px;
+    padding: 0;
+    text-align: center;
+}
+
+.ma-del-modal .ma-form-btns {
+    padding: 0 24px 28px;
+}
+
+.ma-del-circle {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #fff1f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 32px auto 16px;
+    font-size: 26px;
+    color: #dc2626;
+}
+
+.ma-del-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 10px;
+}
+
+.ma-del-msg {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0 24px 28px;
+}
+
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .ma-body {
+        padding: 20px 16px;
+    }
+    .ma-stats {
+        flex-direction: column;
+    }
+    .ma-modal {
+        border-radius: 16px;
+    }
+}

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   FaThLarge, FaUserGraduate, FaMapMarkerAlt, FaCalendarAlt,
   FaBullhorn, FaCommentDots, FaArchive, FaSignOutAlt,
-  FaUserPlus, FaRedo,
+  FaUserPlus, FaRedo, FaUniversity,
 } from "react-icons/fa";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -52,9 +52,10 @@ function SidebarSuper({ activePage }) {
   const menuItems = [
     { key: "dashboard",          label: "Dashboard",         icon: FaThLarge,      to: "/superadmin-dashboard"     },
     { key: "scholars",           label: "Scholars",          icon: FaUserGraduate, to: "/scholars-super"           },
-    { key: "announcements",      label: "Announcements",     icon: FaBullhorn,     to: "/announcements-super"      },
-    { key: "calendar",           label: "Calendar",          icon: FaCalendarAlt,  to: "/calendar-super"           },
     { key: "barangay",           label: "Barangay Overview", icon: FaMapMarkerAlt, to: "/barangay-overview-super"  },
+    { key: "university",         label: "University Overview", icon: FaUniversity, to: "/universityoverview-super" },
+    { key: "attendance",         label: "Attendance",        icon: FaRedo,         to: "/attendance-super"         },
+    { key: "calendar",           label: "Calendar",          icon: FaCalendarAlt,  to: "/calendar-super"           },
     { key: "messages-inquiries", label: "Messages",          icon: FaCommentDots,  to: "/messages-inquiries-super" },
     { key: "archives",           label: "Archives",          icon: FaArchive,      to: "/archives-super"           },
   ];

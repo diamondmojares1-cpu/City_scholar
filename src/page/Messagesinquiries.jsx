@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import SidebarSuper from "../components/Sidebar";
+import Sidebar from "../components/Sidebar";
 import {
   FaEllipsisV, FaPaperPlane, FaComments, FaReply, FaTrash,
   FaThumbtack, FaSmile, FaTimes, FaSearch, FaPhone, FaVideo,
@@ -14,7 +14,32 @@ import { useConversations } from "../services/Useconversations.js";
 import { useMessages } from "../services/Usemessages.js";
 import Avatar from "../page/Avatar.jsx";
 
-// ── Profile Popup ────────────────────────────────────────
+// ── Delete Confirm Modal ──────────────────────────────────────
+function DeleteConfirmModal({ onConfirm, onCancel }) {
+  return (
+    <div className="msg-delete-overlay" onClick={onCancel}>
+      <div className="msg-delete-modal" onClick={e => e.stopPropagation()}>
+        <div className="msg-delete-icon-wrap">
+          <FaTrash className="msg-delete-icon" />
+        </div>
+        <h3 className="msg-delete-title">Delete Message?</h3>
+        <p className="msg-delete-msg">
+          This message will be permanently deleted and cannot be recovered.
+        </p>
+        <div className="msg-delete-btns">
+          <button className="msg-delete-cancel" onClick={onCancel}>
+            Cancel
+          </button>
+          <button className="msg-delete-confirm" onClick={onConfirm}>
+            <FaTrash /> Yes, Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Profile Popup ─────────────────────────────────────────────
 function ProfilePopup({ scholar, onClose }) {
   if (!scholar) return null;
   return (
@@ -73,36 +98,19 @@ function ProfilePopup({ scholar, onClose }) {
   );
 }
 
-// ── Message Context Menu ─────────────────────────────────
-function MessageMenu({ msg, isOut, onReply, onDelete, onPin, onClose }) {
-  return (
-    <div className="msg-context-menu" onClick={e => e.stopPropagation()}>
-      <button onClick={() => { onReply(msg); onClose(); }}>
-        <FaReply /> Reply
-      </button>
-      <button onClick={() => { onPin(msg); onClose(); }}>
-        <FaThumbtack /> {msg.pinned ? "Unpin" : "Pin"}
-      </button>
-      {isOut && (
-        <button className="msg-menu-delete" onClick={() => { onDelete(msg); onClose(); }}>
-          <FaTrash /> Delete
-        </button>
-      )}
-    </div>
-  );
-}
-
-// ── Main Component ───────────────────────────────────────
-export default function MessagesinquiriesSuper() {
+// ── Main Component ────────────────────────────────────────────
+export default function MessagesInquiries({ SidebarComponent = Sidebar, activePage = "messages-inquiries" }) {
   const [selected,      setSelected]      = useState(null);
   const [inputText,     setInputText]     = useState("");
   const [search,        setSearch]        = useState("");
   const [replyTo,       setReplyTo]       = useState(null);
-  const [contextMenu,   setContextMenu]   = useState(null); // { msg, x, y }
+  const [contextMenu,   setContextMenu]   = useState(null);
   const [pinnedMsgs,    setPinnedMsgs]    = useState([]);
   const [showPinned,    setShowPinned]    = useState(false);
   const [showProfile,   setShowProfile]   = useState(false);
   const [showEmojiPick, setShowEmojiPick] = useState(false);
+  // ✅ Delete confirm state
+  const [deleteTarget,  setDeleteTarget]  = useState(null);
 
   const messagesEndRef = useRef(null);
   const inputRef       = useRef(null);
@@ -116,7 +124,6 @@ export default function MessagesinquiriesSuper() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Close context menu on outside click
   useEffect(() => {
     const handler = () => setContextMenu(null);
     window.addEventListener("click", handler);
@@ -149,11 +156,22 @@ export default function MessagesinquiriesSuper() {
     setContextMenu({ msg, x: e.clientX, y: e.clientY });
   };
 
-  const handleDeleteMsg = async (msg) => {
-    if (!selected) return;
+  // ✅ Show confirm modal instead of deleting directly
+  const requestDelete = (msg) => {
+    setDeleteTarget(msg);
+    setContextMenu(null);
+  };
+
+  // ✅ Actual delete — only called after user confirms
+  const confirmDelete = async () => {
+    if (!selected || !deleteTarget) return;
     try {
-      await deleteDoc(doc(db, "chats", selected.id, "messages", msg.id));
-    } catch (err) { console.error("Delete msg error:", err); }
+      await deleteDoc(doc(db, "chats", selected.id, "messages", deleteTarget.id));
+    } catch (err) {
+      console.error("Delete msg error:", err);
+    } finally {
+      setDeleteTarget(null);
+    }
   };
 
   const handlePin = (msg) => {
@@ -173,12 +191,13 @@ export default function MessagesinquiriesSuper() {
   const filtered = conversations.filter(c =>
     c.scholarName.toLowerCase().includes(search.toLowerCase())
   );
-  const grouped = groupByDate(messages);
+  const sortedConversations = [...filtered].sort((a, b) => (b.unreadCount || 0) - (a.unreadCount || 0));
+  const grouped      = groupByDate(messages);
   const pinnedInConv = pinnedMsgs.filter(p => messages.find(m => m.id === p.id));
 
   return (
     <div className="msg-wrapper" onClick={() => setContextMenu(null)}>
-      <SidebarSuper activePage="messages-inquiries" />
+      <SidebarComponent activePage={activePage} role="admin" />
 
       <div className="msg-main">
         <div className="msg-body">
@@ -218,12 +237,12 @@ export default function MessagesinquiriesSuper() {
             <div className="msg-chat-list-card">
               {loading
                 ? <div className="msg-chat-empty">Loading…</div>
-                : filtered.length === 0
+                : sortedConversations.length === 0
                   ? <div className="msg-chat-empty">No conversations found.</div>
-                  : filtered.map(conv => (
+                  : sortedConversations.map(conv => (
                     <div
                       key={conv.id}
-                      className={`msg-chat-item ${selected?.id === conv.id ? "active" : ""}`}
+                      className={`msg-chat-item ${selected?.id === conv.id ? "active" : ""} ${conv.unreadCount ? "unread" : ""}`}
                       onClick={() => handleSelect(conv)}
                     >
                       <div className="msg-chat-item-avatar">
@@ -313,7 +332,7 @@ export default function MessagesinquiriesSuper() {
                       <React.Fragment key={gi}>
                         <div className="msg-date-divider"><span>{group.label}</span></div>
                         {group.msgs.map(msg => {
-                          const isOut   = msg.sender === "admin";
+                          const isOut    = msg.sender === "admin";
                           const isPinned = pinnedMsgs.find(p => p.id === msg.id);
                           return (
                             <div
@@ -325,7 +344,6 @@ export default function MessagesinquiriesSuper() {
                                 <Avatar name={selected.scholarName} photoURL={selected.photoURL} size={28} />
                               )}
                               <div className="msg-bubble-wrap">
-                                {/* Reply preview inside bubble */}
                                 {msg.replyTo && (
                                   <div className="msg-reply-preview">
                                     <span className="msg-reply-preview-name">
@@ -344,7 +362,13 @@ export default function MessagesinquiriesSuper() {
                                   <button onClick={() => setReplyTo(msg)} title="Reply"><FaReply /></button>
                                   <button onClick={() => handlePin(msg)} title="Pin"><FaThumbtack /></button>
                                   {isOut && (
-                                    <button onClick={() => handleDeleteMsg(msg)} title="Delete" className="msg-act-delete"><FaTrash /></button>
+                                    <button
+                                      onClick={() => requestDelete(msg)}
+                                      title="Delete"
+                                      className="msg-act-delete"
+                                    >
+                                      <FaTrash />
+                                    </button>
                                   )}
                                 </div>
                               </div>
@@ -415,7 +439,7 @@ export default function MessagesinquiriesSuper() {
         </div>
       </div>
 
-      {/* Context Menu */}
+      {/* ── Context Menu (right-click) ── */}
       {contextMenu && (
         <div
           className="msg-context-menu"
@@ -429,14 +453,22 @@ export default function MessagesinquiriesSuper() {
             <FaThumbtack /> {pinnedMsgs.find(p => p.id === contextMenu.msg.id) ? "Unpin" : "Pin"}
           </button>
           {contextMenu.msg.sender === "admin" && (
-            <button className="msg-menu-delete" onClick={() => { handleDeleteMsg(contextMenu.msg); setContextMenu(null); }}>
+            <button className="msg-menu-delete" onClick={() => requestDelete(contextMenu.msg)}>
               <FaTrash /> Delete
             </button>
           )}
         </div>
       )}
 
-      {/* Profile Popup */}
+      {/* ── Delete Confirm Modal ── */}
+      {deleteTarget && (
+        <DeleteConfirmModal
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+
+      {/* ── Profile Popup ── */}
       {showProfile && (
         <ProfilePopup scholar={selected} onClose={() => setShowProfile(false)} />
       )}

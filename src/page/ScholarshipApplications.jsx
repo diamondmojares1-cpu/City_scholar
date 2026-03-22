@@ -75,7 +75,7 @@ function SectionHeader({ icon: Icon, title }) {
 // Main Component
 // ─────────────────────────────────────────────────────────────
 
-function ScholarshipApplications() {
+function ScholarshipApplications({ SidebarComponent = Sidebar, activePage = "applications" }) {
   const [apps, setApps]                   = useState([]);
   const [loading, setLoading]             = useState(true);
   const [error, setError]                 = useState(null);
@@ -193,7 +193,7 @@ function ScholarshipApplications() {
   // ── Render ────────────────────────────────────────────────
   return (
     <div className="sa-container">
-      <Sidebar activePage="applications" />
+      <SidebarComponent activePage={activePage} />
 
       <main className="sa-main">
         <h1 className="sa-page-title">Applicants</h1>
@@ -240,6 +240,7 @@ function ScholarshipApplications() {
                 <tr>
                   <th>Scholar Name</th>
                   <th>School</th>
+                  <th>Semester</th>
                   <th>GPA</th>
                   <th>Date Submitted</th>
                   <th>Scholarship Status</th>
@@ -248,14 +249,15 @@ function ScholarshipApplications() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} className="sa-empty">Loading…</td></tr>
+                  <tr><td colSpan={7} className="sa-empty">Loading…</td></tr>
                 ) : paginated.length === 0 ? (
-                  <tr><td colSpan={6} className="sa-empty">{searchQuery ? "No results found." : "No applications yet."}</td></tr>
+                  <tr><td colSpan={7} className="sa-empty">{searchQuery ? "No results found." : "No applications yet."}</td></tr>
                 ) : (
                   paginated.map(a => (
                     <tr key={a.id} className="sa-tr">
                       <td className="sa-td-name">{a.firstName} {a.lastName}</td>
                       <td>{a.schoolName || "—"}</td>
+                      <td>{a.semester || a.educationInfo?.semester || "—"}</td>
                       <td>{a.gwa || a.gpa || "—"}</td>
                       <td>
                         {a.submittedAt
@@ -335,6 +337,7 @@ function ScholarshipApplications() {
                   <InfoField label="Contact"        value={selected.contactNumber} />
                   <InfoField label="Barangay"       value={selected.barangay} />
                   <InfoField label="Student ID"     value={selected.studentId} />
+                  <InfoField label="Semester"       value={selected.semester || selected.educationInfo?.semester} />
                   <InfoField label="Date Submitted" value={
                     selected.submittedAt
                       ? new Date(selected.submittedAt).toLocaleDateString(undefined, { dateStyle: "medium" })

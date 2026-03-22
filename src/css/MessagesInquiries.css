@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════
-   MESSAGES & INQUIRIES — Fixed Layout
+   MESSAGES & INQUIRIES — Full CSS with Messenger-style unread
 ══════════════════════════════════════════════════════════ */
 
 * {
@@ -91,7 +91,7 @@
 }
 
 
-/* ── AVATAR ROW — horizontally scrollable with visible thin bar ── */
+/* ── AVATAR ROW ── */
 
 .msg-recent-avatars {
     display: flex;
@@ -99,7 +99,6 @@
     padding: 8px 14px 10px;
     overflow-x: auto;
     flex-shrink: 0;
-    /* thin visible scrollbar */
     scrollbar-width: thin;
     scrollbar-color: #c7d2fe transparent;
 }
@@ -171,6 +170,9 @@
     scrollbar-color: #e2e8f0 transparent;
 }
 
+
+/* ── Conversation Item ── */
+
 .msg-chat-item {
     display: flex;
     align-items: center;
@@ -180,6 +182,7 @@
     transition: background .15s;
     border-radius: 10px;
     margin: 2px 6px;
+    position: relative;
 }
 
 .msg-chat-item:hover {
@@ -188,6 +191,17 @@
 
 .msg-chat-item.active {
     background: #eef2ff;
+}
+
+
+/* ✅ UNREAD — Messenger-style highlight */
+
+.msg-chat-item.unread {
+    background: #f0f4ff;
+}
+
+.msg-chat-item.unread:hover {
+    background: #e8edff;
 }
 
 .msg-chat-item-avatar {
@@ -207,6 +221,15 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: font-weight .15s, color .15s;
+}
+
+
+/* ✅ UNREAD — Bold name like Messenger */
+
+.msg-chat-item.unread .msg-chat-item-name {
+    font-weight: 800;
+    color: #0f172a;
 }
 
 .msg-chat-item-preview {
@@ -216,6 +239,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 2px;
+    font-weight: 400;
+    transition: font-weight .15s, color .15s;
+}
+
+
+/* ✅ UNREAD — Bold + darker preview text like Messenger */
+
+.msg-chat-item.unread .msg-chat-item-preview {
+    font-weight: 700;
+    color: #334155;
 }
 
 .msg-chat-item-meta {
@@ -232,6 +265,14 @@
     white-space: nowrap;
 }
 
+
+/* ✅ UNREAD — time turns blue like Messenger */
+
+.msg-chat-item.unread .msg-chat-item-time {
+    color: #6366f1;
+    font-weight: 700;
+}
+
 .msg-unread-badge {
     background: #6366f1;
     color: #fff;
@@ -241,6 +282,35 @@
     padding: 2px 6px;
     min-width: 18px;
     text-align: center;
+    /* ✅ subtle pulse animation */
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+    }
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0);
+    }
+}
+
+
+/* ✅ Blue left border indicator on unread items */
+
+.msg-chat-item.unread::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    border-radius: 0 3px 3px 0;
+    background: #6366f1;
 }
 
 .msg-chat-empty {
@@ -829,7 +899,135 @@
 }
 
 
-/* Profile Popup */
+/* ══════════════════════════════════════════════════════════
+   DELETE CONFIRM MODAL
+══════════════════════════════════════════════════════════ */
+
+.msg-delete-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    padding: 20px;
+}
+
+.msg-delete-modal {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 380px;
+    padding: 36px 28px 28px;
+    box-shadow: 0 24px 72px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    animation: del-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes del-pop {
+    from {
+        transform: scale(0.92) translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.msg-delete-icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fee2e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.msg-delete-icon {
+    font-size: 1.6rem;
+    color: #dc2626;
+}
+
+.msg-delete-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+}
+
+.msg-delete-msg {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0 0 6px;
+}
+
+.msg-delete-btns {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.msg-delete-cancel {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.msg-delete-cancel:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.msg-delete-confirm {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    border: none;
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: background 0.15s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+}
+
+.msg-delete-confirm:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.msg-delete-confirm:active {
+    transform: translateY(0);
+}
+
+
+/* ── Profile Popup ──────────────────────────────────────── */
 
 .msg-profile-overlay {
     position: fixed;

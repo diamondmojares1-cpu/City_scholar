@@ -60,6 +60,28 @@ function PromoteModal({ scholar, onConfirm, onCancel }) {
   );
 }
 
+// Bulk promote modal
+function BulkPromoteModal({ count, onConfirm, onCancel, loading }) {
+  return (
+    <div className="sa-confirm-overlay" onClick={onCancel}>
+      <div className="sa-confirm-box" onClick={e => e.stopPropagation()}>
+        <div className="sa-confirm-icon sa-promote-icon"><FaArrowUp /></div>
+        <h3 className="sa-confirm-title">Promote Selected?</h3>
+        <p className="sa-confirm-msg">
+          You are about to promote <strong>{count}</strong> scholar{count !== 1 ? "s" : ""} to <strong>Old Scholar</strong>.<br /><br />
+          They will move to <strong>Old Scholars</strong> and gain <strong>Renewal access</strong>.
+        </p>
+        <div className="sa-confirm-btns">
+          <button className="sa-confirm-no" onClick={onCancel} disabled={loading}>No, Cancel</button>
+          <button className="sa-confirm-yes sa-confirm-promote" onClick={onConfirm} disabled={loading}>
+            <FaArrowUp /> {loading ? "Promoting…" : "Yes, Promote All"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────
@@ -154,6 +176,7 @@ function parseApplication(docSnap) {
     applicantType: getApplicantType(data, edu),
     schoolName:    edu.schoolName    || data.schoolName    || data.school || "—",
     course:        edu.course        || data.course        || "—",
+    semester:      edu.semester      || data.semester      || "—",
     yearLevel:     edu.yearLevel     || data.yearLevel     || "—",
     studentId:     edu.studentId     || data.studentId     || "—",
     gwa:           edu.gwa           || data.gwa           || data.gpa   || "—",
@@ -173,12 +196,12 @@ function parseApplication(docSnap) {
     birthCertUrl: docs.birthCertUrl || data.birthCertUrl || "",
     goodMoralUrl: docs.goodMoralUrl || data.goodMoralUrl || "",
     validIdUrl:   docs.validIdUrl   || data.validIdUrl   || "",
-    status:      getRawStatus(data),
-    submittedAt: data.submittedAt || data.createdAt || data.dateSubmitted || 0,
-    promoted:    data.promoted    || false,
+    status:        getRawStatus(data),
+    submittedAt:   data.submittedAt || data.createdAt || data.dateSubmitted || 0,
+    promoted:      data.promoted    || false,
     renewalAccess: data.renewalAccess || false,
-    userId:      data.userId || data.uid || docSnap.id,
-    _raw:        data,
+    userId:        data.userId || data.uid || docSnap.id,
+    _raw:          data,
   };
 }
 
@@ -190,19 +213,22 @@ function isReturningApplicant(applicantType) {
 // ─────────────────────────────────────────────────────────────
 // Main Component
 // ─────────────────────────────────────────────────────────────
-function Scholars() {
-  const [newScholars,     setNewScholars]     = useState([]);
-  const [oldScholars,     setOldScholars]     = useState([]);
-  const [loading,         setLoading]         = useState(true);
-  const [error,           setError]           = useState(null);
-  const [searchQuery,     setSearchQuery]     = useState("");
-  const [activeTab,       setActiveTab]       = useState("new");
-  const [selected,        setSelected]        = useState(null);
-  const [archiving,       setArchiving]       = useState(null);
-  const [promoting,       setPromoting]       = useState(null);
-  const [confirmTarget,   setConfirmTarget]   = useState(null);
-  const [promoteTarget,   setPromoteTarget]   = useState(null);
-  const [promoteSuccess,  setPromoteSuccess]  = useState(null); // name of just-promoted scholar
+function Scholars({ SidebarComponent = Sidebar }) {
+  const [newScholars,    setNewScholars]    = useState([]);
+  const [oldScholars,    setOldScholars]    = useState([]);
+  const [loading,        setLoading]        = useState(true);
+  const [error,          setError]          = useState(null);
+  const [searchQuery,    setSearchQuery]    = useState("");
+  const [activeTab,      setActiveTab]      = useState("new");
+  const [selected,       setSelected]       = useState(null);
+  const [archiving,      setArchiving]      = useState(null);
+  const [promoting,      setPromoting]      = useState(null);
+  const [confirmTarget,  setConfirmTarget]  = useState(null);
+  const [promoteTarget,  setPromoteTarget]  = useState(null);
+  const [promoteSuccess, setPromoteSuccess] = useState(null);
+  const [checkedIds,     setCheckedIds]     = useState(new Set());
+  const [showBulkModal,  setShowBulkModal]  = useState(false);
+  const [bulkPromoting,  setBulkPromoting]  = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -211,7 +237,7 @@ function Scholars() {
       try {
         const [appSnap, renewalSnap] = await Promise.all([
           getDocs(collection(db, "scholarship_applications")),
-          getDocs(collection(db, "renewals")),
+          getDocs(collection(db, "scholar_renewals")),
         ]);
 
         const newList = [];
@@ -240,7 +266,7 @@ function Scholars() {
           if (status !== "approved") return;
 
           const app = parseApplication(docSnap);
-          app.sourceCollection = "renewals";
+          app.sourceCollection = "scholar_renewals";
           if (!app.applicantType || app.applicantType === "—") {
             app.applicantType = "Returning Applicant";
           }
@@ -270,9 +296,34 @@ function Scholars() {
     return currentList.filter(a =>
       (a.fullName   || "").toLowerCase().includes(q) ||
       (a.course     || "").toLowerCase().includes(q) ||
+      (a.semester   || "").toLowerCase().includes(q) ||
       (a.schoolName || "").toLowerCase().includes(q)
     );
   }, [currentList, searchQuery]);
+
+  useEffect(() => { setCheckedIds(new Set()); }, [activeTab]);
+
+  // selection helpers
+  const allFilteredIds = filtered.map(a => a.id);
+  const allChecked     = allFilteredIds.length > 0 && allFilteredIds.every(id => checkedIds.has(id));
+  const someChecked    = allFilteredIds.some(id => checkedIds.has(id));
+  const checkedCount   = allFilteredIds.filter(id => checkedIds.has(id)).length;
+
+  function toggleAll() {
+    const next = new Set(checkedIds);
+    if (allChecked) {
+      allFilteredIds.forEach(id => next.delete(id));
+    } else {
+      allFilteredIds.forEach(id => next.add(id));
+    }
+    setCheckedIds(next);
+  }
+
+  function toggleOne(id) {
+    const next = new Set(checkedIds);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setCheckedIds(next);
+  }
 
   // ── Archive ───────────────────────────────────────────────
   function requestArchive(scholar) { setConfirmTarget(scholar); }
@@ -304,55 +355,44 @@ function Scholars() {
   // ── Promote ───────────────────────────────────────────────
   function requestPromote(scholar) { setPromoteTarget(scholar); }
 
+  async function promoteSingle(scholar) {
+    await updateDoc(doc(db, scholar.sourceCollection, scholar.id), {
+      promoted:      true,
+      renewalAccess: true,
+      applicantType: "Returning Applicant",
+      promotedAt:    serverTimestamp(),
+    });
+
+    const userId = scholar.userId;
+    const targetId = userId || scholar.id;
+    if (targetId) {
+      try {
+        await updateDoc(doc(db, "users", targetId), {
+          renewalAccess: true,
+          promoted:      true,
+        });
+      } catch (_) {}
+    }
+
+    const promoted = {
+      ...scholar,
+      promoted:      true,
+      renewalAccess: true,
+      applicantType: "Returning Applicant",
+    };
+    setNewScholars(prev => prev.filter(s => s.id !== scholar.id));
+    setOldScholars(prev => [promoted, ...prev]);
+  }
+
   async function doPromote() {
     const scholar = promoteTarget;
     setPromoteTarget(null);
     setPromoting(scholar.id);
     try {
-      // 1. Update the scholarship_applications doc:
-      //    - promoted = true (moves them to Old Scholars tab)
-      //    - renewalAccess = true (unlocks Renewal page for student)
-      //    - applicantType = "Returning Applicant"
-      await updateDoc(doc(db, scholar.sourceCollection, scholar.id), {
-        promoted:         true,
-        renewalAccess:    true,
-        applicantType:    "Returning Applicant",
-        promotedAt:       serverTimestamp(),
-      });
-
-      // 2. Also update the users/{userId} doc so student's account reflects it
-      const userId = scholar.userId;
-      if (userId && userId !== scholar.id) {
-        try {
-          await updateDoc(doc(db, "users", userId), {
-            renewalAccess: true,
-            promoted:      true,
-          });
-        } catch (_) {
-          // users doc might not exist separately — not critical
-        }
-      } else {
-        // If userId === docId, also try updating users collection
-        try {
-          await updateDoc(doc(db, "users", scholar.id), {
-            renewalAccess: true,
-            promoted:      true,
-          });
-        } catch (_) {}
-      }
-
-      // 3. Move scholar from newScholars → oldScholars in local state
-      const promoted = { ...scholar, promoted: true, renewalAccess: true, applicantType: "Returning Applicant" };
-      setNewScholars(prev => prev.filter(s => s.id !== scholar.id));
-      setOldScholars(prev => [promoted, ...prev]);
-
-      // 4. Close modal if viewing this scholar
+      await promoteSingle(scholar);
       if (selected?.id === scholar.id) setSelected(null);
-
-      // 5. Show success flash
       setPromoteSuccess(scholar.fullName);
       setTimeout(() => setPromoteSuccess(null), 3500);
-
     } catch (err) {
       console.error("Promote error:", err);
       alert("Failed to promote. Please try again.");
@@ -361,18 +401,39 @@ function Scholars() {
     }
   }
 
+  async function doBulkPromote() {
+    const toPromote = newScholars.filter(s => checkedIds.has(s.id));
+    if (toPromote.length === 0) return;
+    setBulkPromoting(true);
+    try {
+      for (const s of toPromote) {
+        await promoteSingle(s);
+      }
+      setCheckedIds(new Set());
+      setShowBulkModal(false);
+      setPromoteSuccess(`${toPromote.length} scholar${toPromote.length !== 1 ? "s" : ""} promoted`);
+      setTimeout(() => setPromoteSuccess(null), 3500);
+    } catch (err) {
+      console.error("Bulk promote error:", err);
+      alert("Some scholars could not be promoted. Please try again.");
+    } finally {
+      setBulkPromoting(false);
+    }
+  }
+
   return (
     <div className="sa-container">
-      <Sidebar activePage="scholars" />
+      <SidebarComponent activePage="scholars" />
 
       <main className="sa-main">
         {error && <div className="sa-error-banner">{error}</div>}
 
-        {/* ── Promote Success Toast ── */}
         {promoteSuccess && (
           <div className="sa-promote-toast">
             <FaCheckCircle className="sa-toast-icon" />
-            <span><strong>{promoteSuccess}</strong> promoted to Old Scholar! Renewal access granted.</span>
+            <span>
+              <strong>{promoteSuccess}</strong> promoted to Old Scholar! Renewal access granted.
+            </span>
           </div>
         )}
 
@@ -382,14 +443,37 @@ function Scholars() {
               <h2 className="sa-table-title">Scholars</h2>
               <p className="sa-table-sub">View all approved and renewing scholars</p>
             </div>
-            {!loading && (
-              <span className="sa-count-badge">
-                {filtered.length} record{filtered.length !== 1 ? "s" : ""}
-              </span>
-            )}
+
+            <div className="sa-header-right">
+              {/* Floating action bar — only visible when something is checked */}
+              {activeTab === "new" && checkedCount > 0 && (
+                <div className="sa-float-actions">
+                  <span className="sa-float-count">{checkedCount} selected</span>
+                  <button
+                    className="sa-btn sa-btn-promote"
+                    onClick={() => setShowBulkModal(true)}
+                    disabled={bulkPromoting}
+                  >
+                    <FaArrowUp size={10} />
+                    {bulkPromoting ? "Promoting…" : "Promote Selected"}
+                  </button>
+                  <button
+                    className="sa-btn sa-btn-cancel"
+                    onClick={() => setCheckedIds(new Set())}
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+
+              {!loading && (
+                <span className="sa-count-badge">
+                  {filtered.length} record{filtered.length !== 1 ? "s" : ""}
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Tabs */}
           <div className="sa-tabs-wrap">
             <button
               className={"sa-tab-pill " + (activeTab === "new" ? "sa-tab-pill-active" : "")}
@@ -409,15 +493,27 @@ function Scholars() {
             </button>
           </div>
 
-          {/* Table */}
           <div className="sa-table-wrap">
             <table className="sa-table">
               <thead>
                 <tr>
+                  {activeTab === "new" && (
+                    <th className="sa-th-check">
+                      <input
+                        type="checkbox"
+                        className="sa-checkbox"
+                        checked={allChecked}
+                        ref={el => { if (el) el.indeterminate = someChecked && !allChecked; }}
+                        onChange={toggleAll}
+                        title="Select all"
+                      />
+                    </th>
+                  )}
                   <th>Scholar Name</th>
                   <th>Type</th>
                   <th>School</th>
                   <th>Course</th>
+                  <th>Semester</th>
                   <th>Year</th>
                   <th>GWA</th>
                   <th>Status</th>
@@ -426,10 +522,10 @@ function Scholars() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={8} className="sa-empty">Loading…</td></tr>
+                  <tr><td colSpan={activeTab === "new" ? 9 : 8} className="sa-empty">Loading…</td></tr>
                 ) : filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="sa-empty">
+                    <td colSpan={activeTab === "new" ? 9 : 8} className="sa-empty">
                       {searchQuery
                         ? "No results found."
                         : activeTab === "new"
@@ -440,6 +536,16 @@ function Scholars() {
                 ) : (
                   filtered.map(a => (
                     <tr key={a.id} className="sa-tr">
+                      {activeTab === "new" && (
+                        <td className="sa-td-check">
+                          <input
+                            type="checkbox"
+                            className="sa-checkbox"
+                            checked={checkedIds.has(a.id)}
+                            onChange={() => toggleOne(a.id)}
+                          />
+                        </td>
+                      )}
                       <td className="sa-td-name">{a.fullName}</td>
                       <td>
                         <span className={`sa-type-badge ${isReturningApplicant(a.applicantType) || a.promoted ? "returning" : "new"}`}>
@@ -448,6 +554,7 @@ function Scholars() {
                       </td>
                       <td>{a.schoolName}</td>
                       <td>{a.course}</td>
+                      <td>{a.semester || "—"}</td>
                       <td>{a.yearLevel}</td>
                       <td>{a.gwa}</td>
                       <td><StatusBadge status={a.status} /></td>
@@ -456,7 +563,6 @@ function Scholars() {
                           <button className="sa-btn sa-btn-view" onClick={() => setSelected(a)}>
                             View
                           </button>
-                          {/* Promote button — only show on New Scholars tab */}
                           {activeTab === "new" && (
                             <button
                               className="sa-btn sa-btn-promote"
@@ -487,13 +593,27 @@ function Scholars() {
         </div>
       </main>
 
-      {/* Archive Confirm */}
-      <ConfirmModal scholar={confirmTarget} onConfirm={doArchive} onCancel={() => setConfirmTarget(null)} />
+      <ConfirmModal
+        scholar={confirmTarget}
+        onConfirm={doArchive}
+        onCancel={() => setConfirmTarget(null)}
+      />
 
-      {/* Promote Confirm */}
-      <PromoteModal scholar={promoteTarget} onConfirm={doPromote} onCancel={() => setPromoteTarget(null)} />
+      <PromoteModal
+        scholar={promoteTarget}
+        onConfirm={doPromote}
+        onCancel={() => setPromoteTarget(null)}
+      />
 
-      {/* Detail Modal */}
+      {showBulkModal && (
+        <BulkPromoteModal
+          count={checkedCount}
+          onConfirm={doBulkPromote}
+          onCancel={() => !bulkPromoting && setShowBulkModal(false)}
+          loading={bulkPromoting}
+        />
+      )}
+
       {selected && (
         <div className="sa-overlay" onClick={() => setSelected(null)}>
           <div className="sa-modal" onClick={e => e.stopPropagation()}>
@@ -540,6 +660,7 @@ function Scholars() {
                   <InfoField label="Course"         value={selected.course} />
                   <InfoField label="GWA"            value={selected.gwa} />
                   <InfoField label="School Name"    value={selected.schoolName} />
+                  <InfoField label="Semester"       value={selected.semester} />
                   <InfoField label="Student ID"     value={selected.studentId} />
                   <InfoField label="Year Level"     value={selected.yearLevel} />
                 </div>
@@ -573,7 +694,6 @@ function Scholars() {
             </div>
 
             <div className="sa-modal-footer">
-              {/* Show promote button in modal only if New Scholar (not yet promoted) */}
               {!isReturningApplicant(selected.applicantType) && !selected.promoted && (
                 <button
                   className="sa-btn sa-btn-promote"
@@ -592,7 +712,9 @@ function Scholars() {
                 <FaArchive size={13} />
                 {archiving === selected.id ? "Archiving…" : "Archive Scholar"}
               </button>
-              <button className="sa-btn sa-btn-cancel" onClick={() => setSelected(null)}>Close</button>
+              <button className="sa-btn sa-btn-cancel" onClick={() => setSelected(null)}>
+                Close
+              </button>
             </div>
           </div>
         </div>

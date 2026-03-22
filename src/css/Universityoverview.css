@@ -1,0 +1,651 @@
+/* ═══════════════════════════════════════════════════════════
+   University Overview CSS — City Scholar
+═══════════════════════════════════════════════════════════ */
+
+.uov-root {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #f0f2f8;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.uov-main {
+    flex: 1;
+    width: 1220px;
+    margin-left: 200px;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 0;
+    padding: 28px 28px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* ── Header ──────────────────────────────────────────────── */
+
+.uov-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.uov-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1f2b6c;
+    margin: 0;
+}
+
+.uov-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin: 4px 0 0;
+}
+
+.uov-total-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #0f1f3d;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(15, 31, 61, 0.25);
+}
+
+.uov-error {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ── Body 2-col ──────────────────────────────────────────── */
+
+.uov-body {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 20px;
+    align-items: start;
+}
+
+
+/* ── Map Card ────────────────────────────────────────────── */
+
+.uov-map-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 14px 14px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 140px);
+    min-height: 560px;
+    max-height: 800px;
+    overflow: hidden;
+    position: sticky;
+    top: 20px;
+}
+
+.uov-map-label {
+    padding: 16px 20px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.uov-map-wrap {
+    width: 100%;
+    height: 480px;
+}
+
+.uov-leaflet {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.uov-tooltip {
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.leaflet-tooltip.uov-marker-label {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 0;
+}
+
+
+/* ── Size Legend ─────────────────────────────────────────── */
+
+.uov-legend {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 20px 8px;
+    border-top: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+}
+
+.uov-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.uov-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.uov-dot.sm {
+    width: 14px;
+    height: 14px;
+}
+
+.uov-dot.md {
+    width: 18px;
+    height: 18px;
+}
+
+.uov-dot.lg {
+    width: 22px;
+    height: 22px;
+}
+
+
+/* ── Color Legend (per university) ───────────────────────── */
+
+.uov-color-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 10px 20px 14px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.uov-color-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.uov-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.uov-color-label {
+    font-size: 11px;
+    color: #475569;
+    font-weight: 600;
+}
+
+
+/* ── Right Column — scrolls independently ────────────────── */
+
+.uov-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+    padding-right: 2px;
+}
+
+
+/* ── Chart Card ──────────────────────────────────────────── */
+
+.uov-chart-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    padding: 20px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.uov-card-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 14px;
+}
+
+
+/* ── Bar Chart ───────────────────────────────────────────── */
+
+
+/* flex:1 → bars expand to fill when few; scroll kicks in when many */
+
+.uov-bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 180px;
+    padding: 0 4px 2px 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.uov-bar-chart::-webkit-scrollbar {
+    height: 4px;
+}
+
+.uov-bar-chart::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
+}
+
+.uov-bar-column {
+    flex: 1 1 0;
+    /* grows to fill space when few bars */
+    min-width: 42px;
+    /* won't get too thin when many bars */
+    max-width: 90px;
+    /* won't get too wide when 1-2 bars */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    gap: 4px;
+}
+
+.uov-bar-count {
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.uov-bar {
+    width: 100%;
+    min-height: 4px;
+    border-radius: 6px 6px 0 0;
+    transition: filter 0.15s ease, transform 0.15s;
+}
+
+.uov-bar-column:hover .uov-bar {
+    filter: brightness(1.12);
+    transform: scaleY(1.02);
+    transform-origin: bottom;
+}
+
+.uov-bar-label {
+    margin-top: 3px;
+    font-size: 9px;
+    color: #64748b;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 52px;
+}
+
+.uov-loading-txt {
+    font-size: 13px;
+    color: #94a3b8;
+    text-align: center;
+    padding: 20px 0;
+}
+
+
+/* ── University List Card ────────────────────────────────── */
+
+.uov-list-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 420px;
+}
+
+.uov-list-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 18px 20px 12px;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.uov-list-sub {
+    font-size: 12px;
+    color: #64748b;
+    margin: 3px 0 0;
+}
+
+.uov-search {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 999px;
+    padding: 6px 14px;
+    transition: border-color 0.15s;
+    min-width: 160px;
+}
+
+.uov-search:focus-within {
+    border-color: #2563eb;
+}
+
+.uov-search-ico {
+    font-size: 12px;
+}
+
+.uov-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 12px;
+    color: #0f172a;
+    width: 100%;
+    font-family: inherit;
+}
+
+.uov-search input::placeholder {
+    color: #94a3b8;
+}
+
+
+/* ── Table with sticky header + internal scroll ──────────── */
+
+.uov-table-wrap {
+    overflow-y: auto;
+    overflow-x: auto;
+    flex: 1;
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.uov-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.uov-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.uov-table thead tr {
+    background: #0f1f3d;
+}
+
+.uov-table thead th {
+    padding: 11px 14px;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+.uov-tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.1s;
+}
+
+.uov-tr:last-child {
+    border-bottom: none;
+}
+
+.uov-tr:hover {
+    background: #f8faff;
+}
+
+.uov-table tbody td {
+    padding: 11px 14px;
+    color: #334155;
+    vertical-align: middle;
+}
+
+.uov-td-center {
+    text-align: center;
+    padding: 28px 14px !important;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.uov-uni-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+.uov-dot-inline {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.uov-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 0 6px;
+}
+
+.uov-view-btn {
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.uov-view-btn:hover:not(:disabled) {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.uov-view-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+
+/* ── Modal ───────────────────────────────────────────────── */
+
+.uov-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.uov-modal {
+    background: #fff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 24px 72px rgba(0, 0, 0, 0.22);
+    animation: uov-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes uov-pop {
+    from {
+        transform: scale(0.93) translateY(12px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.uov-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.uov-modal-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 4px;
+}
+
+.uov-modal-sub {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0;
+}
+
+.uov-modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.15s;
+}
+
+.uov-modal-close:hover {
+    background: rgba(255, 255, 255, 0.32);
+}
+
+.uov-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #e2e8f0 transparent;
+}
+
+.uov-modal-body .uov-table {
+    margin-top: 0;
+}
+
+.uov-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 14px 24px;
+    border-top: 1px solid #f1f5f9;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.uov-close-btn {
+    height: 36px;
+    padding: 0 22px;
+    border-radius: 8px;
+    border: 1.5px solid;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+}
+
+.uov-close-btn:hover {
+    opacity: 0.8;
+}
+
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 1100px) {
+    .uov-body {
+        grid-template-columns: 1fr;
+    }
+    .uov-map-wrap {
+        height: 360px;
+    }
+    .uov-right {
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+@media (max-width: 768px) {
+    .uov-main {
+        padding: 16px;
+    }
+    .uov-map-wrap {
+        height: 280px;
+    }
+}
