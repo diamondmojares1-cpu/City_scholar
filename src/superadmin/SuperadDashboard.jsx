@@ -471,6 +471,12 @@ export default function SuperadminDashboard() {
     );
   }, [applicants, searchQuery]);
 
+  const applicantCountLabel = useMemo(() => {
+    if (loading) return "Loading...";
+    if (!searchQuery.trim()) return `${formatCount(applicants.length)} Applicants`;
+    return `${formatCount(filteredApplicants.length)} of ${formatCount(applicants.length)} Applicants`;
+  }, [applicants.length, filteredApplicants.length, loading, searchQuery]);
+
   const maxBar = Math.max(1, ...barangayData.map(b => b.count));
 
   useEffect(() => {
@@ -719,9 +725,14 @@ export default function SuperadminDashboard() {
 
           {/* ── ROW 5: Scholar Applicants ── */}
           <div className="sd-card sd-card-full">
-            <div className="sd-card-head">
-              <h3>Scholar Applicants</h3>
-              <p>All scholars who have submitted an application.</p>
+            <div className="sd-card-head sd-card-head-split">
+              <div className="sd-card-head-copy">
+                <h3>Scholar Applicants</h3>
+                <p>All scholars who have submitted an application.</p>
+              </div>
+              <div className="sd-head-count" aria-label="Scholar applicant count">
+                {applicantCountLabel}
+              </div>
             </div>
             <div className="sd-table-wrap">
               <table className="sd-table">
