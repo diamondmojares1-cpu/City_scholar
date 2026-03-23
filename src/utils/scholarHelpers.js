@@ -29,7 +29,11 @@ export function parseScholarApplication(docSnap) {
     (
       data.originalApplicantType ||
       data.previousApplicantType ||
-      (data.promoted === true ? "" : applicantType)
+      (data.promoted === true
+        ? ""
+        : isReturningApplicant(applicantType)
+          ? "New Applicant"
+          : applicantType)
     ).toString().trim();
 
   const firstName =

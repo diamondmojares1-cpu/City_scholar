@@ -574,9 +574,7 @@ function Scholars({ SidebarComponent = Sidebar }) {
                             </button>
                           )}
 
-                          {activeTab === "old" &&
-                            scholar.sourceCollection === "scholarship_applications" &&
-                            scholar.promoted && (
+                          {activeTab === "old" && scholar.promoted && (
                               <button
                                 className="sa-btn sa-btn-unpromote"
                                 onClick={() => requestUnpromote(scholar)}
@@ -736,7 +734,7 @@ function Scholars({ SidebarComponent = Sidebar }) {
                 </button>
               )}
 
-              {selected.sourceCollection === "scholarship_applications" && selected.promoted && (
+              {selected.promoted && (
                 <button
                   className="sa-btn sa-btn-unpromote"
                   onClick={() => {

@@ -28,8 +28,11 @@ export async function fetchApprovedScholars() {
 
     const scholar = parseScholarApplication(docSnap);
     scholar.sourceCollection = "scholarship_applications";
+    const isOldScholar = raw.promoted === true || isReturningApplicant(scholar.applicantType);
+    scholar.promoted = isOldScholar;
+    scholar.renewalAccess = raw.renewalAccess === true || isOldScholar;
 
-    if (isReturningApplicant(scholar.applicantType) || raw.promoted === true) {
+    if (isOldScholar) {
       oldList.push(scholar);
     } else {
       newList.push(scholar);
@@ -42,12 +45,21 @@ export async function fetchApprovedScholars() {
 
     const scholar = parseScholarApplication(docSnap);
     scholar.sourceCollection = "scholar_renewals";
+    const isOldScholar = raw.promoted !== false;
+    scholar.promoted = isOldScholar;
+    scholar.renewalAccess = raw.renewalAccess === true || isOldScholar;
 
     if (!scholar.applicantType || scholar.applicantType === "-") {
-      scholar.applicantType = "Returning Applicant";
+      scholar.applicantType = isOldScholar
+        ? "Returning Applicant"
+        : scholar.originalApplicantType || "New Applicant";
     }
 
-    oldList.push(scholar);
+    if (isOldScholar) {
+      oldList.push(scholar);
+    } else {
+      newList.push(scholar);
+    }
   });
 
   newList.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
