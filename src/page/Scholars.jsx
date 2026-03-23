@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   FaArchive,
+  FaArrowDown,
   FaArrowUp,
   FaCheckCircle,
   FaExclamationTriangle,
@@ -17,6 +18,7 @@ import {
   archiveScholarRecord,
   fetchApprovedScholars,
   promoteScholarRecord,
+  unpromoteScholarRecord,
 } from "../services/scholarService";
 import { filterScholars, isReturningApplicant } from "../utils/scholarHelpers";
 
@@ -112,6 +114,36 @@ function BulkPromoteModal({ count, onConfirm, onCancel, loading }) {
   );
 }
 
+function UnpromoteModal({ scholar, onConfirm, onCancel }) {
+  if (!scholar) return null;
+
+  return (
+    <div className="sa-confirm-overlay" onClick={onCancel}>
+      <div className="sa-confirm-box" onClick={(event) => event.stopPropagation()}>
+        <div className="sa-confirm-icon sa-unpromote-icon">
+          <FaArrowDown />
+        </div>
+        <h3 className="sa-confirm-title">Unpromote Scholar?</h3>
+        <p className="sa-confirm-msg">
+          You are about to move <strong>{scholar.fullName}</strong> back to{" "}
+          <strong>New Scholars</strong>.
+          <br />
+          <br />
+          Their <strong>renewal access</strong> will be removed until they are promoted again.
+        </p>
+        <div className="sa-confirm-btns">
+          <button className="sa-confirm-no" onClick={onCancel}>
+            No, Cancel
+          </button>
+          <button className="sa-confirm-yes sa-confirm-unpromote" onClick={onConfirm}>
+            <FaArrowDown /> Yes, Unpromote
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function StatusBadge({ status }) {
   const normalized = ((status || "pending") + "").toLowerCase();
   const map = {
@@ -173,9 +205,11 @@ function Scholars({ SidebarComponent = Sidebar }) {
   const [selected, setSelected] = useState(null);
   const [archiving, setArchiving] = useState(null);
   const [promoting, setPromoting] = useState(null);
+  const [unpromoting, setUnpromoting] = useState(null);
   const [confirmTarget, setConfirmTarget] = useState(null);
   const [promoteTarget, setPromoteTarget] = useState(null);
-  const [promoteSuccess, setPromoteSuccess] = useState(null);
+  const [unpromoteTarget, setUnpromoteTarget] = useState(null);
+  const [actionNotice, setActionNotice] = useState(null);
   const [checkedIds, setCheckedIds] = useState(new Set());
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkPromoting, setBulkPromoting] = useState(false);
@@ -271,10 +305,25 @@ function Scholars({ SidebarComponent = Sidebar }) {
     setPromoteTarget(scholar);
   }
 
+  function requestUnpromote(scholar) {
+    setUnpromoteTarget(scholar);
+  }
+
+  function showNotice(message, detail) {
+    setActionNotice({ message, detail });
+    setTimeout(() => setActionNotice(null), 3500);
+  }
+
   async function promoteSingle(scholar) {
     const promoted = await promoteScholarRecord(scholar);
     setNewScholars((prev) => prev.filter((item) => item.id !== scholar.id));
     setOldScholars((prev) => [promoted, ...prev]);
+  }
+
+  async function unpromoteSingle(scholar) {
+    const unpromoted = await unpromoteScholarRecord(scholar);
+    setOldScholars((prev) => prev.filter((item) => item.id !== scholar.id));
+    setNewScholars((prev) => [unpromoted, ...prev]);
   }
 
   async function doPromote() {
@@ -291,13 +340,35 @@ function Scholars({ SidebarComponent = Sidebar }) {
         setSelected(null);
       }
 
-      setPromoteSuccess(scholar.fullName);
-      setTimeout(() => setPromoteSuccess(null), 3500);
+      showNotice(scholar.fullName, "promoted to Old Scholar! Renewal access granted.");
     } catch (err) {
       console.error("Promote error:", err);
       alert("Failed to promote. Please try again.");
     } finally {
       setPromoting(null);
+    }
+  }
+
+  async function doUnpromote() {
+    const scholar = unpromoteTarget;
+    if (!scholar) return;
+
+    setUnpromoteTarget(null);
+    setUnpromoting(scholar.id);
+
+    try {
+      await unpromoteSingle(scholar);
+
+      if (selected?.id === scholar.id) {
+        setSelected(null);
+      }
+
+      showNotice(scholar.fullName, "moved back to New Scholars. Renewal access removed.");
+    } catch (err) {
+      console.error("Unpromote error:", err);
+      alert("Failed to unpromote. Please try again.");
+    } finally {
+      setUnpromoting(null);
     }
   }
 
@@ -314,10 +385,10 @@ function Scholars({ SidebarComponent = Sidebar }) {
 
       setCheckedIds(new Set());
       setShowBulkModal(false);
-      setPromoteSuccess(
-        `${toPromote.length} scholar${toPromote.length !== 1 ? "s" : ""} promoted`
+      showNotice(
+        `${toPromote.length} scholar${toPromote.length !== 1 ? "s" : ""}`,
+        "promoted to Old Scholar! Renewal access granted."
       );
-      setTimeout(() => setPromoteSuccess(null), 3500);
     } catch (err) {
       console.error("Bulk promote error:", err);
       alert("Some scholars could not be promoted. Please try again.");
@@ -333,11 +404,11 @@ function Scholars({ SidebarComponent = Sidebar }) {
       <main className="sa-main">
         {error && <div className="sa-error-banner">{error}</div>}
 
-        {promoteSuccess && (
+        {actionNotice && (
           <div className="sa-promote-toast">
             <FaCheckCircle className="sa-toast-icon" />
             <span>
-              <strong>{promoteSuccess}</strong> promoted to Old Scholar! Renewal access granted.
+              <strong>{actionNotice.message}</strong> {actionNotice.detail}
             </span>
           </div>
         )}
@@ -503,6 +574,20 @@ function Scholars({ SidebarComponent = Sidebar }) {
                             </button>
                           )}
 
+                          {activeTab === "old" &&
+                            scholar.sourceCollection === "scholarship_applications" &&
+                            scholar.promoted && (
+                              <button
+                                className="sa-btn sa-btn-unpromote"
+                                onClick={() => requestUnpromote(scholar)}
+                                disabled={unpromoting === scholar.id}
+                                title="Move back to New Scholars and remove renewal access"
+                              >
+                                <FaArrowDown size={10} />
+                                {unpromoting === scholar.id ? "..." : "Unpromote"}
+                              </button>
+                            )}
+
                           <button
                             className="sa-btn sa-btn-archive"
                             onClick={() => requestArchive(scholar)}
@@ -532,6 +617,12 @@ function Scholars({ SidebarComponent = Sidebar }) {
         scholar={promoteTarget}
         onConfirm={doPromote}
         onCancel={() => setPromoteTarget(null)}
+      />
+
+      <UnpromoteModal
+        scholar={unpromoteTarget}
+        onConfirm={doUnpromote}
+        onCancel={() => setUnpromoteTarget(null)}
       />
 
       {showBulkModal && (
@@ -642,6 +733,20 @@ function Scholars({ SidebarComponent = Sidebar }) {
                 >
                   <FaArrowUp size={13} />
                   {promoting === selected.id ? "Promoting..." : "Promote to Old Scholar"}
+                </button>
+              )}
+
+              {selected.sourceCollection === "scholarship_applications" && selected.promoted && (
+                <button
+                  className="sa-btn sa-btn-unpromote"
+                  onClick={() => {
+                    setSelected(null);
+                    requestUnpromote(selected);
+                  }}
+                  disabled={unpromoting === selected.id}
+                >
+                  <FaArrowDown size={13} />
+                  {unpromoting === selected.id ? "Unpromoting..." : "Unpromote Scholar"}
                 </button>
               )}
 

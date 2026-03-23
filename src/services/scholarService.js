@@ -71,29 +71,65 @@ export async function archiveScholarRecord(scholar) {
 }
 
 export async function promoteScholarRecord(scholar) {
+  const originalApplicantType =
+    scholar.originalApplicantType || scholar.applicantType || "New Applicant";
+
   await updateDoc(doc(db, scholar.sourceCollection, scholar.id), {
     promoted: true,
     renewalAccess: true,
+    originalApplicantType,
     applicantType: "Returning Applicant",
     promotedAt: serverTimestamp(),
   });
 
   const targetId = scholar.userId || scholar.id;
   if (targetId) {
-    try {
-      await updateDoc(doc(db, "users", targetId), {
+    await setDoc(
+      doc(db, "users", targetId),
+      {
         renewalAccess: true,
         promoted: true,
-      });
-    } catch (_) {
-      // Keep scholar promotion successful even when the user record is missing.
-    }
+      },
+      { merge: true }
+    );
   }
 
   return {
     ...scholar,
     promoted: true,
     renewalAccess: true,
+    originalApplicantType,
     applicantType: "Returning Applicant",
+  };
+}
+
+export async function unpromoteScholarRecord(scholar) {
+  const restoredApplicantType = scholar.originalApplicantType || "New Applicant";
+
+  await updateDoc(doc(db, scholar.sourceCollection, scholar.id), {
+    promoted: false,
+    renewalAccess: false,
+    applicantType: restoredApplicantType,
+    unpromotedAt: serverTimestamp(),
+  });
+
+  const targetId = scholar.userId || scholar.id;
+  if (targetId) {
+    await setDoc(
+      doc(db, "users", targetId),
+      {
+        renewalAccess: false,
+        promoted: false,
+      },
+      { merge: true }
+    );
+  }
+
+  return {
+    ...scholar,
+    promoted: false,
+    renewalAccess: false,
+    applicantType: restoredApplicantType,
+    originalApplicantType: restoredApplicantType,
   };
 }

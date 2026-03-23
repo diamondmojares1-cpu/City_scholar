@@ -24,6 +24,13 @@ export function parseScholarApplication(docSnap) {
   const edu = data.educationInfo || {};
   const financial = data.financialInfo || {};
   const docs = data.documents || {};
+  const applicantType = getApplicantType(data, edu);
+  const originalApplicantType =
+    (
+      data.originalApplicantType ||
+      data.previousApplicantType ||
+      (data.promoted === true ? "" : applicantType)
+    ).toString().trim();
 
   const firstName =
     personal.firstName ||
@@ -47,7 +54,8 @@ export function parseScholarApplication(docSnap) {
     barangay: personal.barangay || data.barangay || "-",
     houseNo: personal.houseNo || data.houseNo || "-",
     middleName: personal.middleName || data.middleName || "-",
-    applicantType: getApplicantType(data, edu),
+    applicantType,
+    originalApplicantType,
     schoolName: edu.schoolName || data.schoolName || data.school || "-",
     course: edu.course || data.course || "-",
     semester: edu.semester || data.semester || "-",

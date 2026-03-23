@@ -408,6 +408,21 @@
 }
 
 
+/* Unpromote */
+
+.sa-btn-unpromote {
+    background: #fff7ed;
+    color: #b45309;
+    border: 1.5px solid #fdba74;
+    min-width: 94px;
+}
+
+.sa-btn-unpromote:hover:not(:disabled) {
+    background: #ffedd5;
+    border-color: #fb923c;
+}
+
+
 /* Archive */
 
 .sa-btn-archive {
@@ -614,6 +629,15 @@
     padding: 3px 10px;
     font-size: 0.7rem;
     font-weight: 600;
+}
+
+.sa-unpromote-icon {
+    color: #b45309;
+    background: rgba(251, 146, 60, 0.12);
+}
+
+.sa-confirm-unpromote {
+    background: #f59e0b;
 }
 
 .sa-modal-body {

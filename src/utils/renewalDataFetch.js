@@ -46,7 +46,6 @@ export async function fetchAllRenewals() {
                 dateSubmitted = new Date(ms).toLocaleDateString(undefined, { dateStyle: "medium" });
             }
 
-            // ✅ FIX: Always store/return lowercase status for consistent comparison
             var rawStatus = (app.status || "pending").toLowerCase().trim();
             var cycleId = app.cycleId || null;
 
@@ -61,7 +60,6 @@ export async function fetchAllRenewals() {
                 gpa: gpa,
                 semester: semester,
                 dateSubmitted: dateSubmitted,
-                // ✅ FIX: lowercase status — matches getRenewalStatusClass/Label
                 status: rawStatus,
                 email: personal.email || app.email || "—",
                 contactNumber: personal.contactNumber || app.contactNumber || "—",
@@ -100,32 +98,24 @@ export async function fetchAllRenewals() {
 
 // ─────────────────────────────────────────────────────────
 // ADMIN — Update renewal status in scholar_renewals
-// ✅ FIX: Saves lowercase status + syncs ALL relevant fields to users/{userId}
+// Saves lowercase status + syncs ALL relevant fields to users/{userId}
 // ─────────────────────────────────────────────────────────
 export async function updateRenewalStatus(applicationId, newStatus, notes) {
     notes = notes || "";
-
-    // ✅ FIX: Always use lowercase for consistency across admin and student
     var statusLower = (newStatus || "").toLowerCase().trim();
 
     try {
         var ref = doc(db, RENEWALS_COL, applicationId);
 
-        // 1. Update the renewal doc with lowercase status
-        var payload = {
-            status: statusLower,
-            updatedAt: Date.now(),
-        };
+        var payload = { status: statusLower, updatedAt: Date.now() };
         if (notes) payload.adminNotes = notes;
         await updateDoc(ref, payload);
 
-        // 2. Sync status back to users/{userId} so student side sees it immediately
         var snap = await getDoc(ref);
         if (snap.exists()) {
             var data = snap.data();
             var userId = data.userId || data.uid || "";
             if (userId) {
-                // ✅ FIX: Update ALL status fields the student side might be reading
                 await updateDoc(doc(db, "users", userId), {
                     renewalStatus: statusLower,
                     applicationStatus: statusLower,
@@ -142,54 +132,78 @@ export async function updateRenewalStatus(applicationId, newStatus, notes) {
 
 // ─────────────────────────────────────────────────────────
 // STUDENT — Check eligibility before showing renewal form
-// Returns { canSubmit, reason, cycleId }
+//
+// ✅ FIXED: A student can ONLY submit a renewal if:
+//   1. Admin explicitly set promoted:true OR renewalAccess:true on their user doc
+//   2. The renewal period is open (settings/renewal → isOpen:true)
+//   3. They haven't already submitted for the current cycle
+//
+// Removed all status-based bypasses (scholarshipStatus, applicationStatus).
+// "Approved" status alone does NOT grant renewal access.
 // ─────────────────────────────────────────────────────────
 export async function checkRenewalEligibility(userId) {
     try {
-        var settingsSnap = await getDoc(doc(db, "settings", "renewal"));
-        var settings = settingsSnap.exists() ? settingsSnap.data() : {};
-        var isOpen = settings.isOpen === true;
-        var currentCycleId = settings.currentCycleId || null;
+        // ── Step 1: Load the student's user document ──────────
+        const userSnap = await getDoc(doc(db, "users", userId));
 
-        var userSnap = await getDoc(doc(db, "users", userId));
-        var promoted = false;
-        if (userSnap.exists()) {
-            var userData = userSnap.data();
-            // ✅ FIX: Check lowercase "approved" since we now save lowercase
-            var statusVal = (
-                userData.scholarshipStatus ||
-                userData.applicationStatus ||
-                userData.renewalStatus || ""
-            ).toLowerCase();
-            var isApproved = statusVal === "approved";
-            promoted = userData.promoted === true ||
-                userData.renewalAccess === true ||
-                isApproved;
-        }
-
-        if (!settingsSnap.exists() && promoted) isOpen = true;
-
-        if (!isOpen && !promoted) {
+        if (!userSnap.exists()) {
             return {
                 canSubmit: false,
-                reason: "Renewal submissions are currently closed.",
+                reason: "User account not found. Please contact support.",
                 cycleId: null,
             };
         }
 
-        if (!currentCycleId) {
-            var now = new Date();
-            currentCycleId = "cycle_" + now.getFullYear() + "_" + (now.getMonth() + 1) + "_" + now.getDate();
+        const userData = userSnap.data();
+
+        // ── Step 2: Check promotion status ────────────────────
+        // ONLY promoted:true OR renewalAccess:true allows access.
+        // No other field (status, scholarshipStatus, etc.) can bypass this.
+        const isPromoted =
+            userData.promoted === true ||
+            userData.renewalAccess === true;
+
+        if (!isPromoted) {
+            return {
+                canSubmit: false,
+                reason: "You are not yet eligible for renewal. Please wait for admin or staff to promote your account.",
+                cycleId: null,
+            };
         }
 
-        var existingSnap = await getDocs(
-            query(collection(db, RENEWALS_COL), where("userId", "==", userId))
-        );
-        var alreadySubmitted = existingSnap.docs.some(function(d) {
-            return d.data().cycleId === currentCycleId;
-        });
+        // ── Step 3: Check if renewal period is open ───────────
+        const settingsSnap = await getDoc(doc(db, "settings", "renewal"));
+        const settings = settingsSnap.exists() ? settingsSnap.data() : {};
+        const isOpen = settings.isOpen === true;
+        let currentCycleId = settings.currentCycleId || null;
 
-        if (alreadySubmitted) {
+        if (!isOpen) {
+            return {
+                canSubmit: false,
+                reason: "Renewal submissions are currently closed. Please check back later.",
+                cycleId: null,
+            };
+        }
+
+        // Fallback cycle ID if not set in settings
+        if (!currentCycleId) {
+            const now = new Date();
+            currentCycleId =
+                "cycle_" + now.getFullYear() +
+                "_" + (now.getMonth() + 1) +
+                "_" + now.getDate();
+        }
+
+        // ── Step 4: Check if already submitted this cycle ─────
+        const existingSnap = await getDocs(
+            query(
+                collection(db, RENEWALS_COL),
+                where("userId", "==", userId),
+                where("cycleId", "==", currentCycleId)
+            )
+        );
+
+        if (!existingSnap.empty) {
             return {
                 canSubmit: false,
                 reason: "You have already submitted a renewal for this cycle. Please wait for the review.",
@@ -197,6 +211,7 @@ export async function checkRenewalEligibility(userId) {
             };
         }
 
+        // ── All checks passed ─────────────────────────────────
         return { canSubmit: true, reason: null, cycleId: currentCycleId };
 
     } catch (err) {
@@ -214,6 +229,7 @@ export async function checkRenewalEligibility(userId) {
 // ─────────────────────────────────────────────────────────
 export async function submitRenewalApplication(userId, renewalData) {
     try {
+        // Re-run eligibility check before submitting
         var eligibility = await checkRenewalEligibility(userId);
         var canSubmit = eligibility.canSubmit;
         var reason = eligibility.reason;
@@ -227,7 +243,7 @@ export async function submitRenewalApplication(userId, renewalData) {
         var payload = {
             userId: userId,
             cycleId: currentCycleId,
-            status: "pending", // ✅ always lowercase
+            status: "pending", // always lowercase
             submittedAt: Date.now(),
             updatedAt: Date.now(),
             personalInfo: {
@@ -264,7 +280,7 @@ export async function submitRenewalApplication(userId, renewalData) {
 
         var docRef = await addDoc(collection(db, RENEWALS_COL), payload);
 
-        // ✅ Sync pending status back to user doc
+        // Sync pending status back to user doc
         await updateDoc(doc(db, "users", userId), {
             renewalStatus: "pending",
             lastRenewalDate: Date.now(),
@@ -300,8 +316,6 @@ export async function fetchStudentRenewals(userId) {
 }
 
 // ── Status helpers ────────────────────────────────────────
-// ✅ All lowercase keys to match the lowercase status we save
-
 export function getRenewalStatusLabel(status) {
     var labels = {
         pending: "Pending Review",

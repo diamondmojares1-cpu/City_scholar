@@ -8,7 +8,7 @@ import {
   FaChevronLeft, FaChevronRight, FaEye,
 } from "react-icons/fa";
 import { fetchScholarshipApplications } from "../services/scholarshipApplicationService.js";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import "../css/Scholarapp.css";
 
@@ -172,10 +172,16 @@ function ScholarshipApplications({ SidebarComponent = Sidebar, activePage = "app
       const userId = selected.userId || selected.id;
       if (userId) {
         try {
-          await updateDoc(doc(db, "users", userId), {
-            applicationStatus: pickedStatus,
-            scholarshipStatus:  pickedStatus,
-          });
+          await setDoc(
+            doc(db, "users", userId),
+            {
+              applicationStatus: pickedStatus,
+              scholarshipStatus: pickedStatus,
+              renewalAccess: false,
+              promoted: false,
+            },
+            { merge: true }
+          );
         } catch (e) { console.warn("Could not update users collection:", e); }
       }
       setApps(prev => prev.map(a => a.id === selected.id ? { ...a, status: pickedStatus } : a));
